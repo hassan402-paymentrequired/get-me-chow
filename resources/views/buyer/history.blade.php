@@ -1,23 +1,16 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Order History') }}
-        </h2>
-    </x-slot>
+<x-user-layout>
 
-    <div class="py-6">
+    <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-black overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-
-
+            <div class="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
                     @forelse  ($orders as $order)
                         <x-pending :order="$order" />
                     @empty
-                        <p class="text-center text-gray-500 dark:text-gray-400">No order history found.</p>
+                        <p class="text-center text-gray-600 ">No order history found.</p>
                     @endforelse
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-user-layout>

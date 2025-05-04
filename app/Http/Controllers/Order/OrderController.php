@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Order;
 
 use App\Events\OrderPlacedEvent;
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -158,56 +159,16 @@ class OrderController extends Controller
     }
 
 
-    public function getPendingOrderForBuyer()
-    {
-        $orders = Order::where('buyer_id', Auth::id())->where('status', OrderStatusEnum::NOT_PICKED)
-            ->whereDate('created_at', Carbon::today())
-            ->withCount('items')
-            ->with('owner')
-            ->orderBy('created_at', 'desc')
-            ->get();
-        // notify()->warning('You have ' . $orders->count() . ' orders');
+   
 
-        return view('buyer.index', compact('orders'));
-    }
-
-    public function getPendingOrderForOwner()
-    {
-        $orders = Order::where('owner_id', Auth::id())->where('status', OrderStatusEnum::PENDIND)
-            ->whereDate('created_at', Carbon::today())
-            ->withCount('items')->get();
-        return view('users.index', compact('orders'));
-    }
+    
 
 
-    public function getRecentOrderForBuyer()
-    {
-        $orders = Order::where('buyer_id', Auth::id())->where('status', OrderStatusEnum::PENDIND)->with('owner')
-            ->whereDate('created_at', Carbon::today())
-            ->withCount('items')
-            ->get();
-           
-        return view('buyer.index', compact('orders'));
-    }
+  
 
-    public function getBuyerOrderHistory()
-    {
-        $orders = Order::where('buyer_id', Auth::id())
-            ->where('status', '!=', OrderStatusEnum::PENDIND->value)
-            ->withCount('items')
-            ->get();
-        return view('buyer.history', compact('orders'));
-    }
+  
 
-    public function getOwnerOrderHistory()
-    {
-        $orders = Order::where('owner_id', Auth::id())
-            ->where('status', '!=', OrderStatusEnum::PENDIND->value)
-            ->orWhere('status', '!=', OrderStatusEnum::NOT_PICKED->value)
-            ->withCount('items')
-            ->get();
-        return view('history', compact('orders'));
-    }
+ 
 
 
     public function updateOrderItemStatus(Request $request, OrderItem $orderItem)

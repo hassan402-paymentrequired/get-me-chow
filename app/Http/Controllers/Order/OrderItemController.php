@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Order;
 
+use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
 use App\Http\Requests\StoreOrderItemRequest;
 use App\Http\Requests\UpdateOrderItemRequest;

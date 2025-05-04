@@ -16,8 +16,8 @@ class BuyerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-         dd($request->user());
-        if (Auth::check() && $request->user()->is_admin) {
+        //  dd($request->user());
+        if (Auth::check() && $request->user()->is_buyer) {
             return $next($request);
 
         }

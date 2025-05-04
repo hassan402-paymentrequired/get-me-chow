@@ -13,10 +13,10 @@
              <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Your Company">
          </div>
          <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
-             <x-nav-link :href="route( true ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(true ? 'buyer.dashboard' : 'dashboard')">
+             <x-nav-link :href="route( auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')">
                  {{ __('Dashboard') }}
              </x-nav-link>
-             @if (auth()->user()->is_buyer ?? true)
+             @if (auth()->user()->is_buyer)
                  <x-nav-link :href="route('order.recent.index')" :active="request()->routeIs('order.recent.index')">
                      {{ __('Recent Bookings') }}
                  </x-nav-link>

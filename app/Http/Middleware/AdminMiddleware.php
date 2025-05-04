@@ -18,7 +18,6 @@ class AdminMiddleware
     {
         if (Auth::check() && $request->user()->is_admin) {
             return $next($request);
-           
         }
         notify()->error('You are not allowed to access this page');
         return back();

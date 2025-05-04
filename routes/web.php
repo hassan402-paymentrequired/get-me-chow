@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Buyer\BuyerController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,7 +13,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/dashboard', [OrderController::class, 'getPendingOrderForOwner'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -34,19 +35,20 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    Route::prefix('buyer')->group(function () {
-        Route::get('/recent-order', [OrderController::class, 'getPendingOrderForBuyer'])->name('order.recent.index');
-        Route::get('/m/dashboard', [OrderController::class, 'getRecentOrderForBuyer'])->name('buyer.dashboard');
-        Route::get('/m/history', [OrderController::class, 'getBuyerOrderHistory'])->name('buyer.history.index');
+    Route::middleware('buyer')->prefix('buyer')->group(function () {
+        Route::get('/recent-order', [BuyerController::class, 'getPendingOrderForBuyer'])->name('order.recent.index');
+        Route::get('/m/dashboard', [BuyerController::class, 'getRecentOrderForBuyer'])->name('buyer.dashboard');
+        Route::get('/m/history', [BuyerController::class, 'getBuyerOrderHistory'])->name('buyer.history.index');
         Route::patch('/update-order-item/{orderItem}', [OrderController::class, 'updateOrderItemStatus'])->name('buyer.update.order.item.status');
         Route::patch('/accept-order/{order}', [OrderController::class, 'acceptOrder'])->name('buyer.order.accept');
-    })->middleware('buyer');
+    });
 
 
-    Route::prefix('owner')->group(function () {
+    Route::middleware('user')->prefix('u')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'getPendingOrderForOwner'])->name('dashboard');
+        Route::get('/history', [UserController::class, 'getOwnerOrderHistory'])->name('owner.history.index');
         Route::patch('/update-order/{order}', [OrderController::class, 'updateOrderStatus'])->name('owner.order.update');
-        Route::get('/history', [OrderController::class, 'getOwnerOrderHistory'])->name('owner.history.index');
-    })->middleware('user');
+    });
 
     Route::get('/user/{user}/account', [OrderController::class, 'getUserAccountInfo'])->name('user.account.info');
 });

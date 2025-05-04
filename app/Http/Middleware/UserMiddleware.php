@@ -16,8 +16,8 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-         dd($request->user());
-        if (Auth::check() && $request->user()->is_admin) {
+        //  dd($request->user());
+        if (Auth::check() && !$request->user()->is_buyer) {
             return $next($request);
         }
         notify()->error('You are not allowed to access this page');
