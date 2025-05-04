@@ -1,12 +1,16 @@
 class Hassan {
     public static void main(String[] args) {
-        String letCook = new Cook().Bean();
-        System.out.println(letCook);
+        new Cook().Bean().Coffee();
     }
 }
 
 class Cook {
-    String Bean() {
-        return "Let's Cook";
+    Cook Bean() {
+        return this;
+    }
+
+    Cook Coffee() {
+        System.out.println("Need some coffee before cooking");
+        return this;
     }
 }
