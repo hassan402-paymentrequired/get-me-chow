@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'floor_id' => Floor::pluck('id')->random(),
             'phone_no' => fake()->unique()->phoneNumber(),
             'is_buyer' => fake()->boolean(),
+            'rotation_index' => null,
         ];
     }
 

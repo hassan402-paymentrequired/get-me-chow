@@ -129,7 +129,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order = $order->load('items');
+        $order = $order->load('items', 'owner', 'buyer');
         return view('order.show', compact('order'));
     }
 
@@ -163,10 +163,9 @@ class OrderController extends Controller
         $orders = Order::where('buyer_id', Auth::id())->where('status', OrderStatusEnum::NOT_PICKED)
             ->whereDate('created_at', Carbon::today())
             ->withCount('items')
+            ->with('owner')
             ->orderBy('created_at', 'desc')
             ->get();
-
-
         // notify()->warning('You have ' . $orders->count() . ' orders');
 
         return view('buyer.index', compact('orders'));
@@ -177,7 +176,7 @@ class OrderController extends Controller
         $orders = Order::where('owner_id', Auth::id())->where('status', OrderStatusEnum::PENDIND)
             ->whereDate('created_at', Carbon::today())
             ->withCount('items')->get();
-        return view('dashboard', compact('orders'));
+        return view('users.index', compact('orders'));
     }
 
 
@@ -187,6 +186,7 @@ class OrderController extends Controller
             ->whereDate('created_at', Carbon::today())
             ->withCount('items')
             ->get();
+           
         return view('buyer.index', compact('orders'));
     }
 

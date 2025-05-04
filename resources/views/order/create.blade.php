@@ -1,19 +1,14 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Make Order') }}
-        </h2>
-    </x-slot>
+<x-user-layout>
 
-    <div class="py-6  " x-data="orderForm()">
+    <div class="  relative isolate pt-16 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" x-data="orderForm()">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-black overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100 grid md:grid-cols-3 gap-5 grid-cols-1">
+            <div class="bg-white dark:bg-white overflow-hidden ">
+                <div class="p-6 text-black grid md:grid-cols-3 gap-5 grid-cols-1">
 
                     {{-- ORDER FORM --}}
                     <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data"
                         @submit="prepareSubmit($el)"
-                        class="border rounded border-neutral-800 p-4 md:col-span-2 col-span-1">
+                        class="border rounded border-gray-100 shadow-sm p-4 md:col-span-2 col-span-1">
                         @csrf
 
                         <input type="hidden" name="items" :value="JSON.stringify(items)">
@@ -31,7 +26,7 @@
                                 x-on:change="getAccountInfo($event.target.value)">
                                 <option value="" selected>-- Select Buyer --</option>
                                 @foreach ($buyers as $buyer)
-                                    <option value="{{ $buyer->id }}">
+                                    <option value="{{ $buyer->id }}" class="text-black">
                                         {{ $buyer->first_name . ' ' . $buyer->last_name }}</option>
                                 @endforeach
                             </x-select>
@@ -42,38 +37,41 @@
                             <x-input-label :value="__('Items')" />
 
                             <div class="flex flex-col gap-3">
-                                <template x-for="(item, index) in items" :key="index">
+                                <template x-for="(item, index) in items" :key="index"
+                                    class="border shadow-sm ">
                                     <div
-                                        class="grid grid-cols-4 max-sm:grid-cols-2 items-start justify-between gap-6 py-4 mt-3">
+                                        class="grid grid-cols-4 max-sm:grid-cols-2 border shadow-sm items-start justify-between gap-6 py-3 px-3 rounded mt-3">
                                         <div class="col-span-2 flex sm:items-center gap-4 sm:gap-6 max-sm:flex-col">
                                             <div
-                                                class="bg-gray-100 p-2 rounded-lg w-24 h-24 shrink-0 flex items-center justify-center">
+                                                class="size-24 flex items-center justify-center rounded-lg shrink-0 bg-gray-100 ring-1 ring-gray-900/10">
+                                                {{-- class="bg-gray-100 p-2 rounded-lg w-24 h-24 shrink-0 flex items-center justify-center"> --}}
                                                 <template x-if="item.image">
                                                     <img :src="item.image" class="w-full h-full object-contain" />
                                                 </template>
-                                                <template x-if="!item.image">
-                                                    <span class="text-gray-800 font-bold text-xl"
+                                                <template x-if="!item.image" class="">
+                                                    <span class="ext-gray-900 uppercase font-bold text-xl"
                                                         x-text="item.name.slice(0, 2).toUpperCase()"></span>
                                                 </template>
+                                              
                                             </div>
                                             <div>
-                                                <h6 class="text-sm font-semibold text-white" x-text="item.name"></h6>
-                                                <p class="text-xs text-white font-medium mt-1">
+                                                <h6 class="text-sm font-semibold text-black" x-text="item.name"></h6>
+                                                <p class="text-xs text-black font-medium mt-1">
                                                     Qty: <span class="ml-1" x-text="item.q"></span>
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div class="ml-auto">
-                                            <h6 class="text-sm font-semibold text-white">Price</h6>
-                                            <p class="text-sm text-white font-medium mt-2"
+                                            <h6 class="text-sm font-semibold text-black">Price</h6>
+                                            <p class="text-sm text-black font-medium mt-2"
                                                 x-text="new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.price)">
                                             </p>
                                         </div>
                                     </div>
                                 </template>
-                                <p class="text-xs text-white font-medium mt-1">
-                                    Total Amount: <span class="ml-1" x-text="total"></span>
+                                <p class="text-xs text-black font-medium mt-1">
+                                    Total Amount: <span class="ml-1 text-black" x-text="total"></span>
                                 </p>
 
 
@@ -102,7 +100,7 @@
                     </form>
 
                     {{-- ADD ITEM TO LIST --}}
-                    <div class="border rounded border-neutral-800 p-4 col-span-1">
+                    <div class="border rounded border-gray-100 shadow-sm p-4 col-span-1">
                         <h4 class="font-semibold text-lg mb-4">Items to Buy</h4>
 
                         <div class="flex flex-col">
@@ -181,8 +179,8 @@
                     </template>
 
                     <button
-                    class="mt-4 text-sm text-gray-500 hover:text-gray-700 dark:text-neutral-300 dark:hover:text-neutral-200"
-                    @click="accounts = null" >Close</button>
+                        class="mt-4 text-sm text-gray-500 hover:text-gray-700 dark:text-neutral-300 dark:hover:text-neutral-200"
+                        @click="accounts = null">Close</button>
                 </div>
             </div>
         </div>
@@ -272,4 +270,4 @@
             }
         }
     </script>
-</x-app-layout>
+</x-user-layout>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -9,14 +10,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::get('/dashboard', [OrderController::class, 'getPendingOrderForOwner'])->middleware(['auth', 'verified'])->name('dashboard');
-
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    });
 
     Route::prefix('order')->group(function () {
         Route::get('/make-order', [OrderController::class, 'create'])->name('order.create');
@@ -24,7 +31,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
         Route::post('/orders/repeat', [OrderController::class, 'repeat'])->name('orders.repeat');
         Route::get('/orders/download', [OrderController::class, 'downloadOrders'])->name('orders.download');
-
     });
 
 
@@ -34,13 +40,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/m/history', [OrderController::class, 'getBuyerOrderHistory'])->name('buyer.history.index');
         Route::patch('/update-order-item/{orderItem}', [OrderController::class, 'updateOrderItemStatus'])->name('buyer.update.order.item.status');
         Route::patch('/accept-order/{order}', [OrderController::class, 'acceptOrder'])->name('buyer.order.accept');
-    });
+    })->middleware('buyer');
 
 
     Route::prefix('owner')->group(function () {
         Route::patch('/update-order/{order}', [OrderController::class, 'updateOrderStatus'])->name('owner.order.update');
         Route::get('/history', [OrderController::class, 'getOwnerOrderHistory'])->name('owner.history.index');
-    });
+    })->middleware('user');
 
     Route::get('/user/{user}/account', [OrderController::class, 'getUserAccountInfo'])->name('user.account.info');
 });

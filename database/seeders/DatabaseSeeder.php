@@ -14,13 +14,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-   
+
 
         $this->call(FloorSeeder::class);
+        $index = 1;
+        User::factory(20)->create()->each(function ($user) use (&$index) {
+            if ($user->is_buyer) {
+                $user->update([
+                    'rotation_index' => $index,
+                ]);
+                $index = $index + 1;
+            } else {
+                $user->update([
+                    'rotation_index' => null,
+                ]);
+            }
+        });
 
-
-        User::factory(20)->create();
-
-        $this->call(AccountNumberSeeder::class);
+        $this->call([AccountNumberSeeder::class, DutyRotationTableSeeder::class]);
     }
 }

@@ -14,6 +14,11 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                border: '#e5e7eb', // Define a custom color if needed
+                // background: 'oklch(0.145 0 0)', // Updated with the requested color
+                foreground: 'oklch(0.985 0 0)',
+            },
         },
     },
 

@@ -31,7 +31,7 @@ class Order extends Model
      */
     public function buyer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'receiver_id');
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 
     /**

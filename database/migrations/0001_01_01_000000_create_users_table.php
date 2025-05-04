@@ -19,12 +19,13 @@ return new class extends Migration
             $table->string('profile_image')->nullable();
             $table->boolean('is_active')->nullable()->default(true);
             $table->boolean('is_buyer')->nullable()->default(false);
+            $table->boolean('is_admin')->nullable()->default(false);
             $table->string('email')->unique();
             $table->string('password');
+            $table->integer('rotation_index')->nullable();
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
-            
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
