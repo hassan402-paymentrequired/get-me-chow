@@ -12,12 +12,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::redirect('/', '/login')->name('login');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
@@ -36,8 +36,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::middleware('buyer')->prefix('buyer')->group(function () {
-        Route::get('/recent-order', [BuyerController::class, 'getPendingOrderForBuyer'])->name('order.recent.index');
-        Route::get('/m/dashboard', [BuyerController::class, 'getRecentOrderForBuyer'])->name('buyer.dashboard');
+        Route::get('/recent-order', [BuyerController::class, 'getRecentOrderForBuyer'])->name('order.recent.index');
+        Route::get('/m/dashboard', [BuyerController::class, 'getPendingOrderForBuyer'])->name('buyer.dashboard');
         Route::get('/m/history', [BuyerController::class, 'getBuyerOrderHistory'])->name('buyer.history.index');
         Route::patch('/update-order-item/{orderItem}', [OrderController::class, 'updateOrderItemStatus'])->name('buyer.update.order.item.status');
         Route::patch('/accept-order/{order}', [OrderController::class, 'acceptOrder'])->name('buyer.order.accept');

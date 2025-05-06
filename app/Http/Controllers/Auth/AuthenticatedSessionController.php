@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        notify()->success('Login Successfully');
+        if (auth()->user()->is_admin) {
+            return redirect()->intended(route('admin.index', absolute: false));
+        }
+
         if (auth()->user()->is_buyer) {
             return redirect()->intended(route('buyer.dashboard', absolute: false));
         }

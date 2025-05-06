@@ -122,22 +122,29 @@
             <!-- Invoice -->
             <div
                 class="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
-                <h2 class="text-base font-semibold text-gray-900">Details</h2>
+                <div class="flex items-center justify-between w-full">
+                    <h2 class="text-base font-semibold text-gray-900">Details</h2>
+                    <dd
+                        class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
+                        {{ \App\OrderStatusEnum::getName($order->status) }}
+                    </dd>
+                </div>
+
                 <dl class="mt-2 grid grid-cols-1 text-sm/6 sm:grid-cols-2">
                     <div class="mt-6 border-t border-gray-900/5 pt-6 sm:pr-4">
-                        <dt class="font-semibold text-gray-900">From</dt>
+                        <dt class="font-semibold text-xs text-gray-400">From</dt>
                         <dd class="mt-2 text-gray-500"><span class="font-medium text-gray-900">
                                 {{ $order->owner->first_name }}
                             </span></dd>
                     </div>
-                    <div class="mt-8 sm:mt-6 sm:border-t sm:border-gray-900/5 sm:pl-4 sm:pt-6">
-                        <dt class="font-semibold text-gray-900">To</dt>
+                    <div class="mt-6 sm:mt-4 sm:border-t sm:border-gray-900/5 sm:pl-4 sm:pt-3">
+                        <dt class="font-semibold test-xs text-gray-400">To</dt>
                         <dd class="mt-2 text-gray-500"><span class="font-medium text-gray-900">
                                 {{ $order->buyer->first_name }}
                             </span></dd>
                     </div>
                 </dl>
-                <table class="mt-16 w-full whitespace-nowrap text-left text-sm/6">
+                <table class="mt-8 w-full whitespace-nowrap text-left text-sm/6">
                     <colgroup>
                         <col class="w-full">
                         <col>
@@ -202,7 +209,7 @@
                         <time datetime="2023-01-23T10:32" class="flex-none py-0.5 text-xs/5 text-gray-500">7d
                             ago</time>
                     </li>
-                 
+
                     <li class="relative flex gap-x-4">
                         <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
                             <div class="w-px bg-gray-200"></div>

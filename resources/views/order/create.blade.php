@@ -21,8 +21,8 @@
                         </div>
 
                         <div class="mt-4">
-                            <x-input-label for="buyer" :value="__('Buyer')" />
-                            <x-select name="buyer" class="w-full" required
+                            <x-input-label for="buyer" :value="__('Buyer: ') . $buyer->first_name . ' ' . $buyer->last_name" />
+                            {{-- <x-select name="buyer" class="w-full" required
                                 x-on:change="getAccountInfo($event.target.value)">
                                 <option value="" selected>-- Select Buyer --</option>
                                 @foreach ($buyers as $buyer)
@@ -30,7 +30,9 @@
                                         {{ $buyer->first_name . ' ' . $buyer->last_name }}</option>
                                 @endforeach
                             </x-select>
-                            <x-input-error :messages="$errors->get('buyer')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('buyer')" class="mt-2" /> --}}
+                                 <x-text-input id="buyer" class="block mt-1 w-full" type="hidden" name="buyer"
+                                required placeholder="e.g Afternoon chow" :value="$buyer->id" />
                         </div>
 
                         <div class="mt-4">
@@ -70,7 +72,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <p class="text-xs text-black font-medium mt-1">
+                                <p class="text-xs text-black font-medium mt-4">
                                     Total Amount: <span class="ml-1 text-black" x-text="total"></span>
                                 </p>
 

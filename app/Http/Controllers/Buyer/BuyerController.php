@@ -11,14 +11,12 @@ class BuyerController
 {
     public function getPendingOrderForBuyer()
     {
-        $orders = Order::where('buyer_id', Auth::id())->where('status', OrderStatusEnum::NOT_PICKED)
+        $orders = Order::where('buyer_id', Auth::id())->where('status', OrderStatusEnum::PENDIND)
             ->whereDate('created_at', Carbon::today())
             ->withCount('items')
             ->with('owner')
             ->orderBy('created_at', 'desc')
             ->get();
-        // notify()->warning('You have ' . $orders->count() . ' orders');
-
         return view('buyer.index', compact('orders'));
     }
 
@@ -30,7 +28,7 @@ class BuyerController
             ->withCount('items')
             ->get();
 
-        return view('buyer.index', compact('orders'));
+        return view('buyer.pending', compact('orders'));
     }
 
       public function getBuyerOrderHistory()

@@ -17,9 +17,9 @@
                  {{ __('Dashboard') }}
              </x-nav-link>
              @if (auth()->user()->is_buyer)
-                 <x-nav-link :href="route('order.recent.index')" :active="request()->routeIs('order.recent.index')">
+                 {{-- <x-nav-link :href="route('order.recent.index')" :active="request()->routeIs('order.recent.index')">
                      {{ __('Recent Bookings') }}
-                 </x-nav-link>
+                 </x-nav-link> --}}
                  <x-nav-link :href="route('buyer.history.index')" :active="request()->routeIs('buyer.history.index')">
                      {{ __('History') }}
                  </x-nav-link>

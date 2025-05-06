@@ -21,7 +21,7 @@ class UserController
     {
         return view('history', [
             'orders' => Order::where('owner_id', Auth::id())
-                ->whereNotIn('status', [OrderStatusEnum::PENDIND->value, OrderStatusEnum::NOT_PICKED->value])
+                ->whereNotIn('status', [OrderStatusEnum::PENDIND->value])
                 ->withCount('items')
                 ->get()
         ]);

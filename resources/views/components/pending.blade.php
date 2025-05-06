@@ -59,14 +59,13 @@
                          <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem"
                              tabindex="-1" id="options-menu-1-item-1">Edit</a>
                      @endif
-                     @if ($order->status === \App\OrderStatusEnum::NOT_PICKED->value)
+                     {{-- @if ($order->status === \App\OrderStatusEnum::NOT_PICKED->value)
                          <form action="{{ route('buyer.order.accept', ['order' => $order]) }}" method="post">
                              @csrf
                              @method('PATCH')
-                             {{-- <x-primary-button>Accept Order</x-primary-button> --}}
                              <button class="block px-3 py-1 text-sm/6 text-gray-900">Accept Order</button>
                          </form>
-                     @endif
+                     @endif --}}
                      <a href="{{ route('order.show', $order->id) }}" class="block px-3 py-1 text-sm/6 text-gray-900"
                          role="menuitem" tabindex="-1" id="options-menu-1-item-0">View </a>
                  </div>

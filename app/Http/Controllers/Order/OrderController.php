@@ -34,8 +34,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $buyers = User::where('is_buyer', 1)->get();
-        return view('order.create', compact('buyers'));
+        // $buyers = User::where('is_buyer', 1)->get();
+        $buyer = getBuyer();
+        return view('order.create', compact('buyer'));
     }
 
     /**
@@ -159,16 +160,16 @@ class OrderController extends Controller
     }
 
 
-   
-
-    
 
 
-  
 
-  
 
- 
+
+
+
+
+
+
 
 
     public function updateOrderItemStatus(Request $request, OrderItem $orderItem)
