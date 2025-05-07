@@ -1,57 +1,4 @@
 <x-user-layout>
-    {{-- <header class="relative isolate pt-16">
-        <div class="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-            <div class="absolute left-16 top-full -mt-16 transform-gpu opacity-50 blur-3xl xl:left-1/2 xl:-ml-80">
-                <div class="aspect-[1154/678] w-[72.125rem] bg-gradient-to-br from-[#FF80B5] to-[#9089FC]"
-                    style="clip-path: polygon(100% 38.5%, 82.6% 100%, 60.2% 37.7%, 52.4% 32.1%, 47.5% 41.8%, 45.2% 65.6%, 27.5% 23.4%, 0.1% 35.3%, 17.9% 0%, 27.7% 23.4%, 76.2% 2.5%, 74.2% 56%, 100% 38.5%)">
-                </div>
-            </div>
-            <div class="absolute inset-x-0 bottom-0 h-px bg-gray-900/5"></div>
-        </div>
-
-        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-            <div class="mx-auto flex max-w-2xl items-center justify-between gap-x-8 lg:mx-0 lg:max-w-none">
-                <div class="flex items-center gap-x-6">
-                    <div class="size-16 flex items-center justify-center uppercase rounded-full ring-1 ring-gray-900/10">
-                    <span>{{'kl'}}</span>
-                    </div>
-                    <h1>
-                        <div class="text-sm/6 text-gray-500">Invoice <span class="text-gray-700">{{$order->id}}</span></div>
-                        <div class="mt-1 text-base font-semibold text-gray-900">{{$order->name}}</div>
-                    </h1>
-                </div>
-                <div class="flex items-center gap-x-4 sm:gap-x-6 hidden">
-                    <button type="button" class="hidden text-sm/6 font-semibold text-gray-900 sm:block">Copy
-                        URL</button>
-                    <a href="#" class="hidden text-sm/6 font-semibold text-gray-900 sm:block">Edit</a>
-                    <a href="#"
-                        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Send</a>
-
-                    <div class="relative sm:hidden">
-                        <button type="button" class="-m-3 block p-3" id="more-menu-button" aria-expanded="false"
-                            aria-haspopup="true">
-                            <span class="sr-only">More</span>
-                            <svg class="size-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                                data-slot="icon">
-                                <path
-                                    d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
-                            </svg>
-                        </button>
-                        <div class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
-                            role="menu" aria-orientation="vertical" aria-labelledby="more-menu-button"
-                            tabindex="-1">
-                            <!-- Active: "bg-gray-50 outline-none", Not Active: "" -->
-                            <button type="button" class="block w-full px-3 py-1 text-left text-sm/6 text-gray-900"
-                                role="menuitem" tabindex="-1" id="more-menu-item-0">Copy URL</button>
-                            <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem"
-                                tabindex="-1" id="more-menu-item-1">Edit</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header> --}}
-
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 isolate relative">
         <div
             class="mx-auto grid max-w-2xl grid-cols-1 grid-rows-1 items-start gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
@@ -193,62 +140,196 @@
                 </table>
             </div>
 
-            <div class="lg:col-start-3">
+            <div class="lg:col-start-3" x-data="{
+                messages: [],
+                newMessage: '',
+                orderId: '{{ $order->id }}',
+                channel: null,
+                fetchMessagesUrl: '{{ route('api.orders.messages', ['order' => $order->id]) }}',
+                sendMessageUrl: '{{ route('orders.message.sent', ['order' => $order->id]) }}',
+            
+                mount() {
+                    this.fetchMessages();
+                    this.setupWebSockets();
+                },
+            
+                async fetchMessages() {
+                    try {
+                        const response = await fetch(this.fetchMessagesUrl);
+                        const data = await response.json();
+                        this.messages = data.messages;
+                    } catch (error) {
+                        console.error('Error fetching messages:', error);
+                    }
+                },
+            
+                setupWebSockets() {
+                    this.channel = Echo.private(`order.${this.orderId}`)
+                        .listen('OrderMessageSentEvent', (event) => {
+                            this.messages.push(event.chat);
+                            setTimeout(() => {
+                                window.scrollTo(0, document.body.scrollHeight);
+                            }, 100);
+                        });
+                },
+            
+                async sendMessage() {
+                    if (!this.newMessage.trim()) return;
+                    try {
+                        const response = await fetch(this.sendMessageUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                message: this.newMessage
+                            })
+                        });
+                        if (response.ok) {
+                            this.newMessage = '';
+                        }
+                    } catch (error) {
+                        console.error('Error sending message:', error);
+                    }
+                },
+            
+                formatTime(timestamp) {
+                    const date = new Date(timestamp);
+                    return new Intl.DateTimeFormat('default', {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        day: 'numeric',
+                        month: 'short'
+                    }).format(date);
+                }
+            }" x-init="mount()">
                 <!-- Activity feed -->
                 <h2 class="text-sm/6 font-semibold text-gray-900">Activity</h2>
                 <ul role="list" class="mt-6 space-y-6">
-                    <li class="relative flex gap-x-4">
-                        <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
-                            <div class="w-px bg-gray-200"></div>
-                        </div>
-                        <div class="relative flex size-6 flex-none items-center justify-center bg-white">
-                            <div class="size-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
-                        </div>
-                        <p class="flex-auto py-0.5 text-xs/5 text-gray-500"><span
-                                class="font-medium text-gray-900">Chelsea Hagon</span> created the invoice.</p>
-                        <time datetime="2023-01-23T10:32" class="flex-none py-0.5 text-xs/5 text-gray-500">7d
-                            ago</time>
-                    </li>
-
-                    <li class="relative flex gap-x-4">
-                        <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
-                            <div class="w-px bg-gray-200"></div>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            alt="" class="relative mt-3 size-6 flex-none rounded-full bg-gray-50">
-                        <div class="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
-                            <div class="flex justify-between gap-x-4">
-                                <div class="py-0.5 text-xs/5 text-gray-500"><span
-                                        class="font-medium text-gray-900">Chelsea Hagon</span> commented</div>
-                                <time datetime="2023-01-23T15:56" class="flex-none py-0.5 text-xs/5 text-gray-500">3d
-                                    ago</time>
+                    <template x-for="(message, index) in messages" :key="index">
+                        <li class="relative flex gap-x-4">
+                            <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
+                                <div class="w-px bg-gray-200"></div>
                             </div>
-                            <p class="text-sm/6 text-gray-500">Called client, they reassured me the invoice would
-                                be paid by the 25th.</p>
-                        </div>
-                    </li>
+                            <div class="relative flex size-6 flex-none items-center justify-center bg-white">
+                                <div class="size-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+                            </div>
+                            <div class="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
+                                <div class="flex justify-between gap-x-4">
+                                    <div class="py-0.5 text-xs/5 text-gray-500">
+                                        <span class="font-medium text-gray-900"
+                                            x-text="message.user.first_name"></span>
+                                        <span
+                                            x-text="message.user_id === '{{ auth()->id() }}' ? '(You)' : ''"></span>
+                                    </div>
+                                    <time class="flex-none py-0.5 text-xs/5 text-gray-500"
+                                        x-text="formatTime(message.created_at)"></time>
+                                </div>
+                                <p class="text-sm/6 text-gray-500" x-text="message.message"></p>
+                            </div>
+                        </li>
+                    </template>
                 </ul>
 
                 <!-- New comment form -->
                 <div class="mt-6 flex gap-x-3">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt="" class="size-6 flex-none rounded-full bg-gray-50">
-                    <form action="#" class="relative flex-auto">
+                    <div class="size-6 flex items-center justify-center rounded-full bg-gray-50 uppercase text-xs">
+                        {{ auth()->user()->first_name[0] }}
+                    </div>
+                    <form @submit.prevent="sendMessage" class="relative flex-auto">
                         <div
-                            class="overflow-hidden rounded-lg pb-12 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                            <label for="comment" class="sr-only">Add your comment</label>
-                            <textarea rows="2" name="comment" id="comment"
+                            class="overflow-hidden rounded-lg pb-12 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black">
+                            <label for="comment" class="sr-only">Add your message</label>
+                            <textarea rows="2" x-model="newMessage" id="comment"
                                 class="block w-full resize-none bg-transparent px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                                placeholder="Add your comment..."></textarea>
+                                placeholder="Add your comment..." @keydown.enter.prevent="sendMessage"></textarea>
                         </div>
 
                         <div class="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
                             <button type="submit"
-                                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Comment</button>
+                                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                :disabled="!newMessage.trim()">
+                                Comment
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    {{-- <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('chatComponent', () => ({
+                messages: [],
+                newMessage: '',
+                orderId: {{ $order->id }},
+                channel: null,
+                fetchMessagesUrl: "{{ route('api.orders.messages', ['order' => $order->id]) }}", // Pass the route URL
+                sendMessageUrl: "{{ route('orders.message.sent', ['order' => $order->id]) }}",
+
+                initChat() {
+                    // Load existing messages
+                    this.fetchMessages();
+
+                    // Set up Echo with Reverb
+                    this.setupWebSockets();
+                },
+
+                async fetchMessages() {
+                    try {
+                        const response = await fetch(`/api/orders/${this.orderId}/messages`);
+                        this.messages = await response.json();
+                    } catch (error) {
+                        console.error('Error fetching messages:', error);
+                    }
+                },
+
+                setupWebSockets() {
+                    this.channel = Echo.private(`order.${this.orderId}`)
+                        .listen('OrderMessageSentEvent', (data) => {
+                            console.log(e)
+                            this.messages.push(data.message);
+                            // Scroll to bottom
+                            setTimeout(() => {
+                                window.scrollTo(0, document.body.scrollHeight);
+                            }, 100);
+                        });
+                },
+
+                async sendMessage() {
+                    if (!this.newMessage.trim()) return;
+
+                    try {
+                        const response = await fetch(this.sendMessageUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                message: this.newMessage
+                            })
+                        });
+                        console.log(response)
+                        if (response.ok) {
+                            this.newMessage = '';
+                        }
+                    } catch (error) {
+                        console.error('Error sending message:', error);
+                    }
+                },
+
+                formatTime(timestamp) {
+                    const date = new Date(timestamp);
+                    return new Intl.DateTimeFormat('default', {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        day: 'numeric',
+                        month: 'short'
+                    }).format(date);
+                }
+            }));
+        });
+    </script> --}}
 </x-user-layout>

@@ -81,4 +81,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Floor::class);
     }
+
+    /**
+     * Get all of the messages for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+   public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
+    }
+
+    /**
+     * Get all chats where the user is the buyer.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function buyerChats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'buyer_id');
+    }
 }

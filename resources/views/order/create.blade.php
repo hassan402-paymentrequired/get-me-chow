@@ -31,7 +31,7 @@
                                 @endforeach
                             </x-select>
                             <x-input-error :messages="$errors->get('buyer')" class="mt-2" /> --}}
-                                 <x-text-input id="buyer" class="block mt-1 w-full" type="hidden" name="buyer"
+                            <x-text-input id="buyer" class="block mt-1 w-full" type="hidden" name="buyer"
                                 required placeholder="e.g Afternoon chow" :value="$buyer->id" />
                         </div>
 
@@ -54,7 +54,7 @@
                                                     <span class="ext-gray-900 uppercase font-bold text-xl"
                                                         x-text="item.name.slice(0, 2).toUpperCase()"></span>
                                                 </template>
-                                              
+
                                             </div>
                                             <div>
                                                 <h6 class="text-sm font-semibold text-black" x-text="item.name"></h6>
@@ -93,6 +93,27 @@
                                 <x-input-label for="payment_screenshot" :value="__('Payment Screenshot (optional)')" />
                                 <input id="payment_screenshot" type="file"
                                     class="block mt-1 w-full text-sm text-white" name="payment_screenshot" />
+                            </div>
+
+                            <div class="mt-3">
+                                <x-input-label for="item_name" :value="__('Paid')" />
+                                <div class="grid sm:grid-cols-2 gap-2 ">
+                                    <label for="hs-radio-in-form"
+                                        class="flex p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-black focus:ring-stone-500 ">
+                                        <input type="radio" name="hs-radio-in-form"
+                                            class="shrink-0 mt-0.5 border-gray-200 rounded-full text-black focus:ring-neutral-500 checked:border-neutral-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 "
+                                            id="hs-radio-in-form">
+                                        <span class="text-sm text-gray-500 ms-3 dark:text-neutral-400">Transfer</span>
+                                    </label>
+
+                                    <label for="hs-radio-checked-in-form"
+                                        class="flex p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-black focus:ring-stone-500 ">
+                                        <input type="radio" name="hs-radio-in-form"
+                                            class="shrink-0 mt-0.5 border-gray-200 rounded-full text-black focus:ring-neutral-500 checked:border-neutral-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 "
+                                            id="hs-radio-checked-in-form" checked="">
+                                        <span class="text-sm text-gray-500 ms-3 dark:text-neutral-400">Card</span>
+                                    </label>
+                                </div>
                             </div>
 
                             <x-primary-button class="flex items-center justify-center w-full mt-3">Make
@@ -137,6 +158,8 @@
                                 <input id="image" type="file" class="block mt-1 w-full text-sm text-white"
                                     @change="handleImageUpload" />
                             </div>
+
+
 
                             <div class="mt-4 w-full">
                                 <x-primary-button @click="submit" type="button"

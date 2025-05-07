@@ -15,7 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->integer('total_amount');
-            $table->unsignedInteger('status')->default(7);
+            $table->boolean('is_paid')->default(false);
+            $table->unsignedInteger('status')->default(1);
             $table->string('payment_screenshot')->nullable();
             $table->foreignUlid('owner_id')->nullable()->index()->constrained('users');
             $table->foreignUlid('buyer_id')->nullable()->index()->constrained('users');

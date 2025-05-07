@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Order;
 
+use App\Events\OrderMessageSentEvent;
 use App\Events\OrderPlacedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\AccountNumber;
+use App\Models\Chat;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\OrderStatusEnum;
@@ -123,6 +125,27 @@ class OrderController extends Controller
         $orders = Order::whereDate('created_at', today())->get();
         $pdf = Pdf::loadView('pdf.orders', compact('orders'));
         return $pdf->download('orders.pdf');
+    }
+
+    public function sendMesssage(Request $request, Order $order)
+    {
+        $request->validate([
+            'message' => 'required',
+        ]);
+
+        $message = $order->chats()->create([
+            'message' => $request->message,
+            'user_id' =>  Auth::id(),
+        ]);
+
+        broadcast(new OrderMessageSentEvent($message));
+
+        return response()->json(['status' => 'Message sent']);
+    }
+
+    public function getOrderMesssages(Order $order)
+    {
+        return response()->json(['messages' => $order->chats()->with('user')->get()]);
     }
 
 

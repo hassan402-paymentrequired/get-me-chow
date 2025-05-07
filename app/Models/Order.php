@@ -43,4 +43,14 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Get all of the chats for the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
+    }
 }

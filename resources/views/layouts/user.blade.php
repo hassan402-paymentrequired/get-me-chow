@@ -16,7 +16,7 @@
         {{ $slot }}
     </main>
     <x-notify::notify />
-    @notifyJs
+    {{-- @notifyJs --}}
     <script>
         window.User = {!! json_encode(optional(auth()->user())->only('id', 'email')) !!}
     </script>

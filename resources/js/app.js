@@ -28,7 +28,14 @@ window.Echo.private(`order.${window.User.id}`)
         console.log('OrderPlacedEvent received:', e);
         playSound('/audio/sound.mp3');
     });
-// console.log(window.User.id)
+
+    
+window.Echo.private(`order.message.${window.User.id}`)
+    .listen("OrderMessageSentEvent", (e) => {
+        console.log('OrderMessageSentEvent received:', e);
+    });
+
+
 window.Echo.private(`order.delayed.${window.User.id}`)
     .listen('OrderDelayed', (e) => {
         console.log('Order delayed!', e);

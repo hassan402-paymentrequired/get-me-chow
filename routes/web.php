@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
         Route::post('/orders/repeat', [OrderController::class, 'repeat'])->name('orders.repeat');
         Route::get('/orders/download', [OrderController::class, 'downloadOrders'])->name('orders.download');
+        Route::post('/orders/message/{order}/send', [OrderController::class, 'sendMesssage'])->name('orders.message.sent');
+        Route::get('/order/messages/{order}', [OrderController::class, 'getOrderMesssages'])->name('api.orders.messages');
+
     });
 
 
