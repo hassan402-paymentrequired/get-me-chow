@@ -238,4 +238,6 @@ class OrderController extends Controller
             'user' => $user->first_name . ' ' . $user->last_name,
         ]);
     }
+
+   
 }

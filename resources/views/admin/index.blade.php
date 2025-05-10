@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        @include('components.admin-recent-order-card')
+        @include('components.admin-recent-visitor-card')
 
     </div>
 </x-admin-layout>

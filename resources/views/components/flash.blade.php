@@ -1,6 +1,6 @@
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-        <div class="max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-neutral-800 dark:border-neutral-700 absolute right-10 top-5 duration-100"
+        <div class="max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg  absolute right-10 top-5 duration-100"
             role="alert" tabindex="-1" aria-labelledby="hs-toast-error-example-label" x-init="setTimeout(() => { $el.style.display = 'none'; }, 4000)">
             <div class="flex p-4">
                 <div class="shrink-0">
@@ -12,7 +12,7 @@
                     </svg>
                 </div>
                 <div class="ms-3">
-                    <p id="hs-toast-error-example-label" class="text-sm text-gray-700 dark:text-neutral-400">
+                    <p id="hs-toast-error-example-label" class="text-sm text-gray-700 ">
                         {{ $error }}
                     </p>
                 </div>
@@ -22,7 +22,7 @@
 @endif
 
 @session('success')
-    <div class="max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-neutral-800 dark:border-neutral-700 absolute right-10 top-5 duration-100"
+    <div class="max-w-xs bg-white border border-gray-200 rounded-xl shadow-lg absolute right-10 top-5 duration-100"
         role="alert" tabindex="-1" aria-labelledby="hs-toast-success-example-label" x-init="setTimeout(() => { $el.style.display = 'none'; }, 4000)">
         <div class="flex p-4">
             <div class="shrink-0">
@@ -34,7 +34,7 @@
                 </svg>
             </div>
             <div class="ms-3">
-                <p id="hs-toast-success-example-label" class="text-sm text-gray-700 dark:text-neutral-400">
+                <p id="hs-toast-success-example-label" class="text-sm text-gray-700 ">
                     {{ $value }}
                 </p>
             </div>

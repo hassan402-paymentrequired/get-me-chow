@@ -16,12 +16,16 @@ class OrderMessageSentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public Chat $chat;
+    public User $user;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(public Chat $chat)
+    public function __construct(Chat $chat)
     {
-        //
+        $this->chat = $chat;
+        $this->user = $chat->user; // Assuming the Chat model has a `user` relationship
     }
 
     /**
@@ -33,6 +37,22 @@ class OrderMessageSentEvent implements ShouldBroadcast
     {
         return [
             new PrivateChannel("order.{$this->chat->order_id}"),
+        ];
+    }
+
+    /**
+     * The data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'chat' => $this->chat,
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->first_name,
+            ],
         ];
     }
 }

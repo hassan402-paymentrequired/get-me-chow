@@ -205,8 +205,8 @@
                 }
             }" x-init="mount()">
                 <!-- Activity feed -->
-                <h2 class="text-sm/6 font-semibold text-gray-900">Activity</h2>
-                <ul role="list" class="mt-6 space-y-6">
+                <h2 class="text-sm/6 font-semibold text-gray-900">Chat</h2>
+                <ul role="list" class="mt-6 space-y-6 h-[5%] overflow-hidden overflow-y-auto">
                     <template x-for="(message, index) in messages" :key="index">
                         <li class="relative flex gap-x-4">
                             <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
@@ -230,6 +230,23 @@
                             </div>
                         </li>
                     </template>
+                    <template x-if="messages.length === 0">
+                        <li class="relative flex gap-x-4">
+                            <div class="absolute -bottom-6 left-0 top-0 flex w-6 justify-center">
+                                <div class="w-px bg-gray-200"></div>
+                            </div>
+                            <div class="relative flex size-6 flex-none items-center justify-center bg-white">
+                                <div class="size-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+                            </div>
+                            <div class="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
+                                <div class="flex justify-between gap-x-4">
+                                    <div class="py-0.5 text-xs/5 text-gray-500">
+                                        No messages yet
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
                 </ul>
 
                 <!-- New comment form -->
@@ -240,7 +257,6 @@
                     <form @submit.prevent="sendMessage" class="relative flex-auto">
                         <div
                             class="overflow-hidden rounded-lg pb-12 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black">
-                            <label for="comment" class="sr-only">Add your message</label>
                             <textarea rows="2" x-model="newMessage" id="comment"
                                 class="block w-full resize-none bg-transparent px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                                 placeholder="Add your comment..." @keydown.enter.prevent="sendMessage"></textarea>

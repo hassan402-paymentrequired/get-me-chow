@@ -1,7 +1,7 @@
- <header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10">
+ <header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10" x-data="{ open: false }">
      <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
          <div class="flex flex-1 items-center gap-x-6">
-             <button type="button" class="-m-3 p-3 md:hidden">
+             <button type="button" class="-m-3 p-3 md:hidden" @click="open = true">
                  <span class="sr-only">Open main menu</span>
                  <svg class="size-5 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
                      data-slot="icon">
@@ -10,22 +10,25 @@
                          clip-rule="evenodd" />
                  </svg>
              </button>
-             <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Your Company">
+             <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Getmechow">
          </div>
          <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
-             <x-nav-link :href="route( auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')">
+             <x-nav-link :href="route(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')">
                  {{ __('Dashboard') }}
              </x-nav-link>
              @if (auth()->user()->is_buyer)
-                 {{-- <x-nav-link :href="route('order.recent.index')" :active="request()->routeIs('order.recent.index')">
-                     {{ __('Recent Bookings') }}
-                 </x-nav-link> --}}
                  <x-nav-link :href="route('buyer.history.index')" :active="request()->routeIs('buyer.history.index')">
                      {{ __('History') }}
                  </x-nav-link>
              @else
                  <x-nav-link :href="route('owner.history.index')" :active="request()->routeIs('owner.history.index')">
                      {{ __('History') }}
+                 </x-nav-link>
+                 <x-nav-link :href="route('owner.visitors.index')" :active="request()->routeIs('owner.visitors.index')">
+                     {{ __('Visitor') }}
+                 </x-nav-link>
+                 <x-nav-link :href="route('order.create')" :active="request()->routeIs('order.create')">
+                     {{ __('Create order') }}
                  </x-nav-link>
              @endif
          </nav>
@@ -38,21 +41,21 @@
                          d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                  </svg>
              </button>
-             <a href="{{route('profile.edit')}}" class="-m-1.5 p-1.5">
-                 <img class="size-8 rounded-full bg-gray-800"
-                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                     alt="">
+             <a href="{{ route('profile.edit') }}" class="-m-1.5 p-1.5">
+                 <div class="flex size-8 rounded-full bg-gray-100 items-center justify-center uppercase">
+                     {{ substr(auth()->user()->first_name, 0, 2) }}
+                 </div>
              </a>
          </div>
      </div>
      <!-- Mobile menu, show/hide based on menu open state. -->
-     <div class="lg:hidden" role="dialog" aria-modal="true">
+     <div class="md:hidden" role="dialog" aria-modal="true" x-show="open">
          <!-- Background backdrop, show/hide based on slide-over state. -->
          <div class="fixed inset-0 z-50"></div>
          <div
              class="fixed inset-y-0 left-0 z-50 w-full overflow-y-auto bg-white px-4 pb-6 sm:max-w-sm sm:px-6 sm:ring-1 sm:ring-gray-900/10">
              <div class="-ml-0.5 flex h-16 items-center gap-x-6">
-                 <button type="button" class="-m-2.5 p-2.5 text-gray-700">
+                 <button type="button" class="-m-2.5 p-2.5 text-gray-700" @click="open = false">
                      <span class="sr-only">Close menu</span>
                      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                          aria-hidden="true" data-slot="icon">

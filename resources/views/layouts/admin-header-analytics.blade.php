@@ -4,9 +4,11 @@
                     <h1 class="text-base/7 font-semibold text-gray-900">Order Flow</h1>
                     <div
                         class="order-last flex w-full gap-x-8 text-sm/6 font-semibold sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:text-sm/7">
-                        <a href="#" class="text-indigo-600">Today</a>
-                        <a href="#" class="text-gray-700">This Week</a>
-                        <a href="#" class="text-gray-700">This Month</a>
+                        <a href="{{ route('admin.index', ['period' => 'today']) }}" class="text-indigo-600">Today</a>
+                        <a href="{{ route('admin.index', ['period' => 'week']) }}" class="text-gray-700">This Week</a>
+                        <a href="{{ route('admin.index', ['period' => 'month']) }}" class="text-gray-700">This
+                            Month</a>
+
                     </div>
                     <a href="#"
                         class="ml-auto flex items-center gap-x-1 rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-stone-500 focus-visible:outline-2 ">
@@ -27,13 +29,15 @@
                         class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8">
                         <dt class="text-sm/6 font-medium text-gray-500">Total Orders</dt>
 
-                        <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">1,245</dd>
+                        <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
+                            {{ $data['ordersCount'] }}</dd>
                     </div>
                     <div
                         class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:border-l sm:px-6 lg:border-t-0 xl:px-8">
-                        <dt class="text-sm/6 font-medium text-gray-500">Pending Orders</dt>
+                        <dt class="text-sm/6 font-medium text-gray-500">Totak Visitors</dt>
 
-                        <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">87</dd>
+                        <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
+                            {{ $data['visitorsCount'] }}</dd>
                     </div>
                     <div
                         class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 lg:border-l xl:px-8">

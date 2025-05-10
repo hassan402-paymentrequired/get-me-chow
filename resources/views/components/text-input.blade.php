@@ -1,3 +1,7 @@
-@props(['disabled' => false])
+@props(['icon' => ''])
+<div class="relative  flex items-center w-full">
+    <input
+        {{ $attributes->merge(['class' => 'w-full text-sm text-slate-800 border border-gray-300 pl-4 pr-10 py-3 rounded outline-none focus:border-none focus:outline-none focus:right-1 focus:ring-black']) }} />
 
-<input @disabled($disabled) {{ $attributes->merge(['class' => 'border-gray-200 dark:border-gray-200 dark:bg-transparent dark:text-black focus:border-neutral-500 dark:focus:border-neutral-600 focus:ring-neutral-500 dark:focus:ring-neutral-600 rounded-md shadow-sm']) }}>
+    {!! $icon !!}
+</div>
