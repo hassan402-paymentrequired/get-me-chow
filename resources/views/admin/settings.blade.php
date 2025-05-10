@@ -66,7 +66,8 @@
                     <p class="mt-1 text-sm/6 text-gray-600">Edit buyer for the current day.</p>
                 </div>
 
-                <form class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+                <form action="{{ route('admin.buyer.change') }}" method="POST" class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+                @csrf
                     <div class="px-4 py-6 sm:p-8">
                         <div class="overflow-hidden rounded-xl border border-gray-200">
                             <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
@@ -126,7 +127,7 @@
                             <label for="country" class="block text-sm/6 font-medium text-gray-900">Change today's
                                 buyer</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="country" name="country" autocomplete="country-name"
+                                <select id="country" name="buyer" autocomplete="country-name"
                                     class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6">
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->first_name }}

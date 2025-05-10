@@ -4,6 +4,7 @@ namespace App\Support\Helper;
 
 use App\Models\Order;
 use App\Models\Visitor;
+use App\OrderStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -53,6 +54,8 @@ trait Filter
         $visitorsCount = Visitor::whereBetween('created_at', $dateRange)->where('is_confirmed', true)->count();
         $ordersCount = Order::whereBetween('created_at', $dateRange)->count();
         $recentVisitors = $this->filterVisitor($request)->whereDate('created_at', Carbon::today())->where('is_confirmed', true)->limit(3)->get();
+        $totalCompletedOrder = Order::where('status', OrderStatusEnum::SUCCESSFULL->value)->whereBetween('created_at', $dateRange)->count();
+        $totalCancelOrder = Order::where('status', OrderStatusEnum::CANCELED->value)->whereBetween('created_at', $dateRange)->count();
         $todaysOrder = Order::whereDate('created_at', Carbon::today())->withCount('items')->get();
         $yesterdaysOrder = Order::whereDate('created_at', now()->subDay())->withCount('items')->take(2)->get();
         return [
@@ -60,7 +63,9 @@ trait Filter
             'ordersCount' => $ordersCount,
             'recentVisitors' => $recentVisitors,
             'todaysOrder' => $todaysOrder,
-            'yesterdaysOrder' => $yesterdaysOrder
+            'yesterdaysOrder' => $yesterdaysOrder,
+            'totalCompletedOrder' => $totalCompletedOrder,
+            'totalCancelOrder' => $totalCancelOrder
         ];
     }
 }

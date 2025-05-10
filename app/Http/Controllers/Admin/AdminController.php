@@ -32,10 +32,22 @@ class AdminController extends Controller
         return view('admin.users', compact('users'));
     }
 
+    public function changeBuyer(Request $request)
+    {
+        $buyer = User::where('current_buyer', true)->first();
+        $buyer->current_buyer = false;
+        $buyer->save();
+        $user = User::find($request->buyer);
+        $user->current_buyer = true;
+        $user->save();
+        return back()->with('success', 'Buyer Changed Successfully');
+    }
+
     public function settings()
     {
         $users = User::whereNotNull('rotation_index')->orderBy('rotation_index')->get();
-        $currentBuyer = getBuyer();
+        // $currentBuyer = getBuyer();
+         $currentBuyer = User::where('current_buyer', true)->first();
         return view('admin.settings', compact('currentBuyer', 'users'));
     }
 

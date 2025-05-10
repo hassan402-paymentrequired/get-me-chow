@@ -22,7 +22,7 @@
                           <div class="flex-auto">
                               <div class="flex items-start gap-x-3">
                                   <div class="text-sm/6 font-medium text-gray-900">
-                                      {{ $user['first_name'] }}
+                                      {{ $user['first_name'] . ' ' . $user['last_name'] }}
                                   </div>
                                   <div
                                       class="rounded-md  px-2 py-1 text-xs font-medium @if ($user['is_active']) text-green-700 ring-green-600/20 bg-green-50
@@ -45,7 +45,7 @@
                       <div class="flex justify-end">
                           <a href="#"
                               class="text-sm/6 font-medium text-black underline hover:text-neutral-500">View<span
-                                  class="hidden sm:inline"> {{ $user['first_name'] }}</span></a>
+                                  class="hidden sm:inline"> {{ $user['first_name'] . ' ' .  $user['last_name'] }}</span></a>
                       </div>
                       <div class="mt-1 text-xs/5 text-gray-500">Email:: <span
                               class="text-gray-900">{{ $user['email'] }}</span></div>
@@ -80,7 +80,7 @@
                           <div class="flex-auto">
                               <div class="flex items-start gap-x-3">
                                   <div class="text-sm/6 font-medium text-gray-900">
-                                      {{ $user['first_name'] }}
+                                      {{ $user['first_name'] . ' ' . $user['last_name'] }}
                                   </div>
                                   <div
                                       class="rounded-md  px-2 py-1 text-xs font-medium @if ($user['is_active']) text-green-700 ring-green-600/20 bg-green-50
@@ -103,7 +103,7 @@
                       <div class="flex justify-end">
                           <a href="#"
                               class="text-sm/6 font-medium text-black underline hover:text-neutral-500">View<span
-                                  class="hidden sm:inline"> {{ $user['first_name'] }}</span></a>
+                                  class="hidden sm:inline"> {{ $user['first_name'] . ' ' .  $user['last_name'] }}</span></a>
                       </div>
                       <div class="mt-1 text-xs/5 text-gray-500">Email:: <span
                               class="text-gray-900">{{ $user['email'] }}</span></div>

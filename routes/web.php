@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::post('/buyer-change', [AdminController::class, 'changeBuyer'])->name('buyer.change');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/visitors', [AdminController::class, 'visitors'])->name('visitors.index');
         Route::get('/visitors/request', [AdminController::class, 'getVisitorsRequest'])->name('visitors.request');

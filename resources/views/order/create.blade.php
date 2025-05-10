@@ -1,6 +1,23 @@
 <x-user-layout>
 
     <div class="  relative isolate pt-16 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" x-data="orderForm()">
+
+        @if ($alreadyBookForToday)
+            <div class="absolute top-17 w-[95%] bg-red-100 border-t-4 border-red-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+                role="alert">
+                <div class="flex">
+                    <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path
+                                d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                        </svg></div>
+                    <div>
+                        <p class="font-bold">Hey {{auth()->user()->first_name}}</p>
+                        <p class="text-sm">You already have an order for today please edit your order.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-white overflow-hidden ">
                 <div class="p-6 text-black grid md:grid-cols-3 gap-5 grid-cols-1">
@@ -22,15 +39,6 @@
 
                         <div class="mt-4">
                             <x-input-label for="buyer" :value="__('Buyer: ') . $buyer->first_name . ' ' . $buyer->last_name" />
-                            {{-- <x-select name="buyer" class="w-full" required
-                                x-on:change="getAccountInfo($event.target.value)">
-                                <option value="" selected>-- Select Buyer --</option>
-                                @foreach ($buyers as $buyer)
-                                    <option value="{{ $buyer->id }}" class="text-black">
-                                        {{ $buyer->first_name . ' ' . $buyer->last_name }}</option>
-                                @endforeach
-                            </x-select>
-                            <x-input-error :messages="$errors->get('buyer')" class="mt-2" /> --}}
                             <x-text-input id="buyer" class="block mt-1 w-full" type="hidden" name="buyer"
                                 required placeholder="e.g Afternoon chow" :value="$buyer->id" />
                         </div>
@@ -116,7 +124,7 @@
                                 </div>
                             </div>
 
-                            <x-primary-button class="flex items-center justify-center w-full mt-3">Make
+                            <x-primary-button @disabled($alreadyBookForToday) class="flex items-center justify-center w-full mt-3">Make
                                 order</x-primary-button>
 
                         </div>

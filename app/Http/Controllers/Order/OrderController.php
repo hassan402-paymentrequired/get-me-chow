@@ -36,9 +36,11 @@ class OrderController extends Controller
      */
     public function create()
     {
-        // $buyers = User::where('is_buyer', 1)->get();
-        $buyer = getBuyer();
-        return view('order.create', compact('buyer'));
+        if(Auth::user()->is_buyer) abort(403);
+        $buyer = User::where('current_buyer', true)->first();
+        $alreadyBookForToday = Order::where('owner_id', Auth::id())->whereDate('created_at', Carbon::today())->exists();
+        
+        return view('order.create', compact('buyer', 'alreadyBookForToday'));
     }
 
     /**
