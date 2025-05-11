@@ -73,6 +73,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/update-order/{order}', [OrderController::class, 'updateOrderStatus'])->name('owner.order.update');
         Route::get('/visitors', [UserController::class, 'getVisitorsForOwner'])->name('owner.visitors.index');
         Route::get('/visitors/history', [UserController::class, 'getUserVisitorsHistory'])->name('owner.visitors.history');
+        Route::patch('/order/remove-items/{orderItem}', [UserController::class, 'removeOrderItems'])->name('owner.order.remove.item');
+        Route::get('/order/add-items/{order}', [UserController::class, 'addOrderItems'])->name('owner.order.remove.add');
     });
 });
 

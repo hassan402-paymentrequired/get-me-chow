@@ -28,7 +28,7 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </dt>
-                            <dd class="text-sm/6 font-medium text-gray-900">{{ $order->owner->first_name }}</dd>
+                            <dd class="text-sm/6 font-medium text-gray-900">{{ ucwords($order->owner->first_name . ' ' . $order->owner->last_name) }}</dd>
                         </div>
                         <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
                             <dt class="flex-none">
@@ -43,10 +43,10 @@
                                 </svg>
                             </dt>
                             <dd class="text-sm/6 text-gray-500">
-                                <time datetime="2023-01-31">{{ $order->created_at->format('y m d') }}</time>
+                                <time datetime="{{ $order->created_at }}">{{ $order->created_at->format('D H:i A') }}</time>
                             </dd>
                         </div>
-                        <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
+                        {{-- <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
                             <dt class="flex-none">
                                 <span class="sr-only">Status</span>
                                 <svg class="h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
@@ -57,7 +57,7 @@
                                 </svg>
                             </dt>
                             <dd class="text-sm/6 text-gray-500">Paid with MasterCard</dd>
-                        </div>
+                        </div> --}}
                     </dl>
                     <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
                         <a href="#" class="text-sm/6 font-semibold text-gray-900">Download receipt <span

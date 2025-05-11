@@ -1,7 +1,8 @@
 <x-user-layout>
     <div class="relative isolate pt-24 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        
         @forelse ($orders as $order)
+            {{-- @include('components.drawer') --}}
+            @each('components.drawer', $orders, 'order')
             <div class="overflow-hidden rounded-xl max-w-5xl w-full m-auto border border-gray-200">
                 <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
                     <div class="size-12 flex items-center justify-center rounded-lg bg-white ring-1 ring-gray-900/10">
@@ -25,11 +26,14 @@
                                 role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1-button"
                                 tabindex="-1">
                                 @if ($order->owner_id === auth()->user()->id)
-                                    <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem"
-                                        tabindex="-1" id="options-menu-1-item-1">Edit</a>
+                                    <a href="{{ route('owner.order.remove.add', $order->id) }}"
+                                        class="block hover:bg-gray-100 px-3 py-1 text-sm/6 text-gray-900">Add Item</a>
+                                    <a href="{{ route('owner.order.remove.item', $order->id) }}"
+                                        class="block hover:bg-gray-100 px-3 py-1 text-sm/6 text-gray-900">Remove
+                                        Item</a>
                                 @endif
                                 <a href="{{ route('order.show', $order->id) }}"
-                                    class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1"
+                                    class="block px-3 py-1 text-sm/6 hover:bg-gray-100  text-gray-900"
                                     id="options-menu-1-item-0">View </a>
                             </div>
                         </div>
@@ -49,7 +53,7 @@
                             <div
                                 class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
                                 {{ \App\OrderItemStatusEnum::getName($order->status) }}
-                                </div>
+                            </div>
                         </dd>
                     </div>
                 </dl>

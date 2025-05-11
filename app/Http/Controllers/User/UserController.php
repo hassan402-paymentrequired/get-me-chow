@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\OrderStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class UserController extends Controller
     {
         $orders = Order::where('owner_id', Auth::id())->where('status', OrderStatusEnum::PENDIND)
             ->whereDate('created_at', Carbon::today())
+            ->with('items')
             ->withCount('items')->get();
         return view('users.index', compact('orders'));
     }
@@ -43,10 +45,19 @@ class UserController extends Controller
         $visitors = $this->filterVisitor($request)
             ->where('employee_id', Auth::id())
             ->where('is_confirmed', true)
-            ->whereDate('created_at', '<' , Carbon::today())
+            ->whereDate('created_at', '<', Carbon::today())
             ->paginate();
         return view('users.visitor.history', compact('visitors'));
     }
 
+    public function removeOrderItems(Request $request, OrderItem $orderItem)
+    {
+        dd($orderItem);
+        return view('users.add-remove', compact('order'));
+    }
 
+    public function addOrderItems(Request $request, Order $order)
+    {
+        return view('users.add-item', compact('order'));
+    }
 }
