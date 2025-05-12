@@ -60,7 +60,8 @@ class AdminController extends Controller
 
     public function getVisitorsRequest()
     {
-        $visitors = Visitor::where('is_confirmed', false)->with(['user', 'latestCheckin'])->get();
+        $visitors = Visitor::where('is_confirmed', false)->with(['user', 'latestCheckin.user'])->get();
+        // dd($visitors);
         return view('admin.visitors.request', compact('visitors'));
     }
     public function visitorsHistory(Request $request)

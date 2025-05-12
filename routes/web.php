@@ -24,6 +24,7 @@ Route::prefix('visitors')->group(function () {
     Route::post('/send-visit-request', [VisitorsController::class, 'sendVisitRequest'])->name('visitor.send.visit.request');
     Route::get('/pending-request/{visitor}', [VisitorsController::class, 'PendingVisitRequest'])->name('visitor.pending.request');
     Route::get('/{visitor}/details', [VisitorsController::class, 'show'])->name('visitor.show');
+    Route::post('/resend-visit-request', [VisitorsController::class, 'resendVisitRequest'])->name('visitor.resend.visit.request');
 });
 
 

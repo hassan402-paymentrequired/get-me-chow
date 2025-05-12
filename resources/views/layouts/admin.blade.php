@@ -17,9 +17,38 @@
         {{ $slot }}
     </main>
 
-    @notifyJs
+    <button onclick="requestPermission()">Enable Notification</button>
+
     <script>
         window.User = {!! json_encode(optional(auth()->user())->only('id', 'email')) !!}
+        navigator.serviceWorker.register("sw.js");
+
+        // widow.addEventListener("load", requestPermission);
+
+        function requestPermission() {
+            Notification.requestPermission().then((permission) => {
+                
+                if (permission === 'granted') {
+
+                    // get service worker
+                    navigator.serviceWorker.ready.then((sw) => {
+
+                        // subscribe
+                        sw.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: "BC5zel9JoqeOY2yVTJjDhiE1IisJTVHq-_p4rxC3zd60gQSqXzra_7_m7B12axwI42tZIUXYGXhIJ-t5MolKjNY"
+                        }).then((subscription) => {
+
+                            // subscription successful
+                            fetch("/api/push-subscribe", {
+                                method: "post",
+                                body: JSON.stringify(subscription)
+                            }).then(alert("ok"));
+                        });
+                    });
+                }
+            });
+        }
     </script>
 </body>
 

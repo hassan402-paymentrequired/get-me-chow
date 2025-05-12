@@ -24,7 +24,7 @@
 
                         <div class="flex items-start flex-col">
                             <span class="text-xs font-semibold">Host</span>
-                            <span class="text-sm ">{{ $visitor->user->first_name . ' ' . $visitor->user->last_name }}</span>
+                            <span class="text-sm ">{{ $visitor->latestCheckin->user->first_name . ' ' . $visitor->latestCheckin->user->last_name }}</span>
                         </div>
                     </div>
 

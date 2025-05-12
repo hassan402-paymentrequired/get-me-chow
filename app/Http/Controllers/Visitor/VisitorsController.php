@@ -48,7 +48,7 @@ class VisitorsController extends Controller
             $visitors = \App\Models\Visitor::where('name', 'like', '%' . $request->q . '%')
                 ->orWhere('email', 'like', '%' . $request->q . '%')
                 ->orWhere('phone', 'like', '%' . $request->q . '%')
-                ->with('user')
+                ->with(['user', 'checkins.user'])
                 ->get();
         }
         return response()->json(['visitors' => $visitors]);
@@ -74,5 +74,17 @@ class VisitorsController extends Controller
     {
         $visitor = $visitor->load(['user', 'checkins']);
         return view('visitors.show', compact('visitor'));
+    }
+
+    public function resendVisitRequest(Request $request)
+    {
+        $visitor = Visitor::find($request->visitor_id);
+        $visitor->checkins()->create([
+            'reason' => $request->reason,
+            'employee_id' => $request->employee_id
+        ]);
+        $visitor->is_confirmed = false;
+        $visitor->save();
+        return to_route('visitor.pending.request', $visitor)->with('success', 'Visit request sent successfully');
     }
 }

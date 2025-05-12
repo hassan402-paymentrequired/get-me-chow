@@ -5,13 +5,20 @@
         hasVisited: false,
         searchQuery: '',
         searchResults: [],
+        selectedUser: null,
         selectedVisitor: null,
         searchVisitors() {
             fetch('{{ route('visitor.search') }}?q=' + encodeURIComponent(this.searchQuery))
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     this.searchResults = data.visitors;
                 });
+        },
+        formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+            return date.toLocaleString('en-US', options).replace(',', ' at');
         }
     }">
         <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
@@ -43,6 +50,9 @@
             </div>
         </div>
 
+        <div x-show="selectedUser" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
+            @include('components.click')
+        </div>
         <div x-show="hasVisited" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
             <div
                 class="relative isolate transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">

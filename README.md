@@ -308,3 +308,17 @@ Hello world  <div class="sm:col-span-2 sm:col-start-1">
                    {{$check->reason ?? 'No reason specified'}}
                 </p>
             </div> --}}
+
+
+
+
+
+
+
+
+               <template x-if="searchQuery && !searchResults?.lenght">
+                        <span class="text-xs text-gray-500">Sorry man. I can't find anything</span>
+                    </template>
+                    <template x-if="searchResults?.lenght">
+                        <span class="text-xs text-gray-500">This is all i could found</span>
+                    </template>

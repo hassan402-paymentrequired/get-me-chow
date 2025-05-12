@@ -1,5 +1,5 @@
  <template x-for="visitor in searchResults">
-     <div>
+     <div @click="selectedUser = visitor; hasVisited = false;  console.log(JSON.parse(JSON.stringify(visitor)))">
          <input type="radio" id="job-3" name="job" value="job-3" class="hidden peer">
          <label for="job-3"
              class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer ">
