@@ -53,4 +53,18 @@ class Order extends Model
     {
         return $this->hasMany(Chat::class);
     }
+
+
+
+
+
+
+    /**##################################
+     *   Methods
+     */ #################################
+
+    public function getItemsCount()
+    {
+        return $this->items()->count();
+    }
 }

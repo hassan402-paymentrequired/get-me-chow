@@ -1,7 +1,6 @@
 <x-user-layout>
-    <div class="relative isolate pt-24 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="relative isolate pt-24 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" x-data="{ drawer: false }">
         @forelse ($orders as $order)
-            {{-- @include('components.drawer') --}}
             @each('components.drawer', $orders, 'order')
             <div class="overflow-hidden rounded-xl max-w-5xl w-full m-auto border border-gray-200">
                 <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
@@ -9,6 +8,7 @@
                         <span class="text-2xl font-bold text-gray-900 uppercase">{{ substr($order->name, 0, 2) }}</span>
                     </div>
                     <div class="text-sm/6 font-medium text-gray-900">{{ $order->name }}</div>
+
                     <div class="relative ml-auto">
                         <div x-data="{ open: false }" class="relative">
                             <button @click="open = !open" type="button"
@@ -28,9 +28,16 @@
                                 @if ($order->owner_id === auth()->user()->id)
                                     <a href="{{ route('owner.order.remove.add', $order->id) }}"
                                         class="block hover:bg-gray-100 px-3 py-1 text-sm/6 text-gray-900">Add Item</a>
-                                    <a href="{{ route('owner.order.remove.item', $order->id) }}"
-                                        class="block hover:bg-gray-100 px-3 py-1 text-sm/6 text-gray-900">Remove
-                                        Item</a>
+                                    <button @click="drawer = true"
+                                        class="block hover:bg-gray-100 w-full text-start px-3 py-1 text-sm/6 text-gray-900">Remove
+                                        Item</button>
+                                    <form action="{{ route('owner.order.delete', ['order' => $order]) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button 
+                                            class="block hover:bg-gray-100 w-full text-start px-3 py-1 text-sm/6 text-gray-900">Delete
+                                            Order</button>
+                                    </form>
                                 @endif
                                 <a href="{{ route('order.show', $order->id) }}"
                                     class="block px-3 py-1 text-sm/6 hover:bg-gray-100  text-gray-900"

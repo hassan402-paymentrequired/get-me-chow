@@ -12,6 +12,7 @@ use App\Models\AccountNumber;
 use App\Models\Chat;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\OrderItemStatusEnum;
 use App\OrderStatusEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -36,10 +37,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        if(Auth::user()->is_buyer) abort(403);
+        if (Auth::user()->is_buyer) abort(403);
         $buyer = User::where('current_buyer', true)->first();
-        $alreadyBookForToday = Order::where('owner_id', Auth::id())->whereDate('created_at', Carbon::today())->exists();
-        
+        $alreadyBookForToday = hasBooked();
         return view('order.create', compact('buyer', 'alreadyBookForToday'));
     }
 
@@ -87,17 +87,17 @@ class OrderController extends Controller
             $order->items()->create([
                 'name' => $item['name'],
                 'quantity' => $item['q'],
-                'amount' => $item['price'],
+                'amount' => (int)$item['price'] * (int)$item['q'],
                 'note' => $item['note'],
                 'image' => $imagePath
             ]);
         }
-        broadcast(new OrderPlacedEvent($order->buyer_id, $order));
+        // broadcast(new OrderPlacedEvent($order->buyer_id, $order));
 
         return redirect()->back()->with('success', 'Order placed successfully.');
     }
 
-    public function repeat()
+    public function repeatLastOrder()
     {
         $yesterday = now()->subDay()->toDateString();
         $lastOrder = auth()->user()->orders()->whereDate('created_at', $yesterday)->first();
@@ -110,6 +110,38 @@ class OrderController extends Controller
         }
 
         return back()->with('error', 'No order found to repeat.');
+    }
+
+    public function repeat(Order $order)
+    {
+        if (hasBooked()) {
+            return back()->with('error', 'You already have a booked an order today');
+        }
+        $totalpamount = 0;
+        $newOrder = $order->replicate();
+        $newOrder->created_at = now();
+        $newOrder->total_amount = 0;
+        $newOrder->payment_screenshot = null;
+        $newOrder->status = OrderStatusEnum::PENDIND->value;
+        $newOrder->save();
+        foreach ($order->items as $item) {
+            $newOrder->items()->create([
+                'name' => $item->name,
+                'image' => $item->image,
+                'amount' => $item->amount,
+                'note' => $item->note,
+                'size' => $item->size,
+                'status' => OrderItemStatusEnum::PENDING->value,
+            ]);
+            $totalpamount += (int)$item->amount;
+        }
+        $newOrder->total_amount += $totalpamount;
+        if ($order->items->count() === 0) {
+            $newOrder->status = OrderStatusEnum::CANCELED->value;
+            $newOrder->save();
+        }
+        $newOrder->save();
+        return to_route('dashboard')->with('success', 'Order repeated successfully.');
     }
 
 
@@ -219,6 +251,10 @@ class OrderController extends Controller
         try {
             $order->status = OrderStatusEnum::SUCCESSFULL->value;
             $order->save();
+            foreach ($order->items as $item) {
+                $item->status = OrderItemStatusEnum::BOUGHT->value;
+                $item->save();
+            }
             return back()->with('success', 'Order mark as successfull');
         } catch (Exception $e) {
             Log::error('Order Update:: ' . $e->getMessage());
@@ -240,6 +276,4 @@ class OrderController extends Controller
             'user' => $user->first_name . ' ' . $user->last_name,
         ]);
     }
-
-   
 }

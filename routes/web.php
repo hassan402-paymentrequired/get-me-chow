@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/make-order', [OrderController::class, 'create'])->name('order.create');
         Route::post('/make-order', [OrderController::class, 'store'])->name('order.store');
         Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
-        Route::post('/orders/repeat', [OrderController::class, 'repeat'])->name('orders.repeat');
+        Route::patch('/orders/repeat/{order}', [OrderController::class, 'repeat'])->name('orders.repeat');
         Route::get('/orders/download', [OrderController::class, 'downloadOrders'])->name('orders.download');
         Route::post('/orders/message/{order}/send', [OrderController::class, 'sendMesssage'])->name('orders.message.sent');
         Route::get('/order/messages/{order}', [OrderController::class, 'getOrderMesssages'])->name('api.orders.messages');
@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/visitors/history', [UserController::class, 'getUserVisitorsHistory'])->name('owner.visitors.history');
         Route::patch('/order/remove-items/{orderItem}', [UserController::class, 'removeOrderItems'])->name('owner.order.remove.item');
         Route::get('/order/add-items/{order}', [UserController::class, 'addOrderItems'])->name('owner.order.remove.add');
+        Route::patch('/order/add-items/{order}', [UserController::class, 'updateOrderItems'])->name('owner.order.remove.update');
+        Route::delete('/order/destroy/{order}', [UserController::class, 'deleteOrder'])->name('owner.order.delete');
     });
 });
 

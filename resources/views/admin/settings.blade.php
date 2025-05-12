@@ -9,16 +9,20 @@
                     <p class="mt-1 text-sm/6 text-gray-600">Use a permanent address where you can receive mail.</p>
                 </div>
 
-                <form class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+                <form class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" method="post"
+                    action="{{ route('profile.update') }}">
+                    @csrf
+                    @method('patch')
                     <div class="px-4 py-6 sm:p-8">
                         <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             <div class="sm:col-span-3">
                                 <label for="first-name" class="block text-sm/6 font-medium text-gray-900">First
                                     name</label>
                                 <div class="mt-2">
-                                    <input type="text" name="first_name" id="first-name" autocomplete="given-name"
-                                        {{-- value="{{auth()->user()->first_name }}" --}}
-                                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6">
+                                    <x-text-input id="first_name" name="first_name" type="text"
+                                        class="mt-1 block w-full" :value="old('name', $user->first_name)" required autofocus
+                                        autocomplete="first_name" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
                                 </div>
                             </div>
 
@@ -26,28 +30,30 @@
                                 <label for="last-name" class="block text-sm/6 font-medium text-gray-900">Last
                                     name</label>
                                 <div class="mt-2">
-                                    <input type="text" name="last-name" id="last-name" autocomplete="family-name"
-                                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6">
+                                    <x-text-input id="last_name" name="last_name" type="text"
+                                        class="mt-1 block w-full" :value="old('name', $user->last_name)" required autofocus
+                                        autocomplete="last_name" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
                                 </div>
                             </div>
 
-                            <div class="sm:col-span-full">
+                            {{-- <div class="sm:col-span-full">
                                 <label for="email" class="block text-sm/6 font-medium text-gray-900">Email
                                     address</label>
                                 <div class="mt-2">
                                     <input id="email" name="email" type="email" autocomplete="email"
                                         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6">
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-span-full">
                                 <label for="street-address" class="block text-sm/6 font-medium text-gray-900">
                                     Phone No
                                 </label>
                                 <div class="mt-2">
-                                    <input type="text" name="street-address" id="street-address"
-                                        autocomplete="street-address"
-                                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6">
+                                    <x-text-input id="phone" name="phone_no" type="text"
+                                        class="mt-1 block w-full" :value="old('name', $user->phone_no)" required />
+                                    <x-input-error class="mt-2" :messages="$errors->get('phone_no')" />
                                 </div>
                             </div>
                         </div>
@@ -66,8 +72,9 @@
                     <p class="mt-1 text-sm/6 text-gray-600">Edit buyer for the current day.</p>
                 </div>
 
-                <form action="{{ route('admin.buyer.change') }}" method="POST" class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
-                @csrf
+                <form action="{{ route('admin.buyer.change') }}" method="POST"
+                    class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+                    @csrf
                     <div class="px-4 py-6 sm:p-8">
                         <div class="overflow-hidden rounded-xl border border-gray-200">
                             <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
@@ -109,15 +116,16 @@
                             <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm/6">
                                 <div class="flex justify-between gap-x-4 py-3">
                                     <dt class="text-gray-500">Email</dt>
-                                    <dd class="text-gray-700"><time datetime="2023-01-22">{{$currentBuyer->email}}</time></dd>
+                                    <dd class="text-gray-700"><time
+                                            datetime="2023-01-22">{{ $currentBuyer->email }}</time></dd>
                                 </div>
                                 <div class="flex justify-between gap-x-4 py-3">
                                     <dt class="text-gray-500">Phone No</dt>
                                     <dd class="flex items-start gap-x-2">
-                                        <div class="font-medium text-gray-900">{{$currentBuyer->phone_no}}</div>
+                                        <div class="font-medium text-gray-900">{{ $currentBuyer->phone_no }}</div>
                                         <div
                                             class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
-                                            {{$currentBuyer->is_active ? 'Active' : 'Inactive'}}</div>
+                                            {{ $currentBuyer->is_active ? 'Active' : 'Inactive' }}</div>
                                     </dd>
                                 </div>
                             </dl>
@@ -148,6 +156,50 @@
                         <button type="button" class="text-sm/6 font-semibold text-gray-900">Cancel</button>
                         <button type="submit"
                             class="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-neutral-500">Save</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-x-8 gap-y-8 py-10 md:grid-cols-3">
+                <div class="px-4 sm:px-0">
+                    <h2 class="text-base/7 font-semibold text-gray-900">Update Password</h2>
+                    <p class="mt-1 text-sm/6 text-gray-600">Ensure your account is using a long, random password to stay secure.</p>
+                </div>
+
+                <form class="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" method="post"
+                    action="{{ route('password.update') }}">
+                    @csrf
+                    @method('put')
+                    <div class="px-4 py-6 sm:p-8">
+                        <div class="grid max-w-2xl gap-y-4">
+                            <div>
+                                <x-input-label for="update_password_current_password" :value="__('Current Password')" />
+                                <x-text-input id="update_password_current_password" name="current_password"
+                                    type="password" class="mt-1 block w-full" autocomplete="current-password" />
+                                <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="update_password_password" :value="__('New Password')" />
+                                <x-text-input id="update_password_password" name="password" type="password"
+                                    class="mt-1 block w-full" autocomplete="new-password" />
+                                <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
+                                <x-text-input id="update_password_password_confirmation" name="password_confirmation"
+                                    type="password" class="mt-1 block w-full" autocomplete="new-password" />
+                                <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+                        <button type="button" class="text-sm/6 font-semibold text-gray-900">Cancel</button>
+                        <button type="submit"
+                            class="rounded bg-black px-3 py-2 text-sm font-semibold text-white shadow-xs focus:ring-2 focus:ring-black focus:ring-offset-2">Save</button>
                     </div>
                 </form>
             </div>

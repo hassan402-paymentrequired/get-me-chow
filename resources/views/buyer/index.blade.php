@@ -1,10 +1,16 @@
 <x-user-layout>
 
-    <div class="relative isolate pt-20 mx-auto max-w-7xl">
+    <div class="relative isolate pt-20 mx-auto max-w-7xl overflow-hidden overflow-y-auto h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-transparent overflow-hidden sm:rounded-lg">
                 <div class="p-6 text-black">
 
+                  @if ($orders->count() > 0 && auth()->user()->is_buyer)
+                        <div class="absolute bottom-10 right-10">
+                        <a  href="#" class="rounded bg-black px-3 py-2 font-semibold text-xs text-white uppercase tracking-widest shadow-xs focus:ring-2 focus:ring-black focus:ring-offset-2">Export as pdf</a>
+                    </div>
+
+                  @endif
 
                     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
                         @forelse  ($orders as $order)

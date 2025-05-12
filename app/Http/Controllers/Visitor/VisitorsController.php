@@ -48,6 +48,7 @@ class VisitorsController extends Controller
             $visitors = \App\Models\Visitor::where('name', 'like', '%' . $request->q . '%')
                 ->orWhere('email', 'like', '%' . $request->q . '%')
                 ->orWhere('phone', 'like', '%' . $request->q . '%')
+                ->with('user')
                 ->get();
         }
         return response()->json(['visitors' => $visitors]);

@@ -58,12 +58,14 @@
                                             {{ $visitor->latestCheckin->check_in_time ?? '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                             {{ $visitor->latestCheckin->check_out_time ?? '-#-' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                            </svg>
+                                        <td class="px-6 py-4 z-10 relative whitespace-nowrap text-end text-sm font-medium">
+                                            <div class="relative">
+                                                <a href="{{ route('visitor.show', ['visitor' => $visitor]) }}"
+                                                    class="inline-flex items-center  text-xs underline border border-transparent text-black hover:text-neutral-500 ">
+                                                    View
+                                                </a>
+
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

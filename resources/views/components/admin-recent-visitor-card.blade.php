@@ -2,14 +2,16 @@
     <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
         <div class="flex items-center justify-between">
             <h2 class="text-base/7 font-semibold text-gray-900">Recent Visitors</h2>
-            <a href="#" class="text-sm/6 font-semibold text-indigo-600 hover:text-indigo-500">View
+            <a href="{{ route('admin.visitors.index') }}"
+                class="text-sm/6 font-semibold text-neutral-600 underline hover:text-neutral-500">View
                 all</a>
         </div>
         <ul role="list" class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
             @foreach ($data['recentVisitors'] as $visitor)
                 <li class="overflow-hidden rounded-xl border border-gray-200">
                     <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
-                        <div class="size-12 flex items-center justify-center rounded-lg bg-gray-100 object-cover ring-1 ring-gray-900/10">
+                        <div
+                            class="size-12 flex items-center justify-center rounded-lg bg-gray-100 object-cover ring-1 ring-gray-900/10">
                             {{ substr($visitor->name, 0, 2) }}
                         </div>
                         <div class="text-sm/6 font-medium text-gray-900">{{ $visitor->name }}</div>
@@ -23,10 +25,13 @@
                                         d="M3 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM8.5 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM15.5 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
                                 </svg>
                             </button>
-                            <div x-show="open" @click.away="open = false" class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-hidden"
+                            <div x-show="open" @click.away="open = false"
+                                class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-hidden"
                                 role="menu" aria-orientation="vertical" tabindex="-1">
-                                <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem">View<span class="sr-only">, Tuple</span></a>
-                                <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem">Edit<span class="sr-only">, Tuple</span></a>
+                                <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900"
+                                    role="menuitem">View<span class="sr-only">, Tuple</span></a>
+                                <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900"
+                                    role="menuitem">Edit<span class="sr-only">, Tuple</span></a>
                             </div>
                         </div>
                     </div>
@@ -54,6 +59,12 @@
                     </dl>
                 </li>
             @endforeach
+
         </ul>
+        @if (count($data['recentVisitors']) === 0)
+            <div class="w-full flex items-center justify-center">
+                <p>No recent visitors yet</p>
+            </div>
+        @endif
     </div>
 </div>

@@ -1,8 +1,7 @@
- <header class="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10" x-data="{ open: false }">
+ <header class="absolute z-10 inset-x-0 top-0  flex h-16 border-b border-gray-900/10" x-data="{ open: false }">
      <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
          <div class="flex flex-1 items-center gap-x-6">
              <button type="button" class="-m-3 p-3 md:hidden" @click="open = true">
-                 <span class="sr-only">Open main menu</span>
                  <svg class="size-5 text-gray-900" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
                      data-slot="icon">
                      <path fill-rule="evenodd"
@@ -24,7 +23,7 @@
                  <x-nav-link :href="route('owner.history.index')" :active="request()->routeIs('owner.history.index')">
                      {{ __('History') }}
                  </x-nav-link>
-                 <x-nav-link :href="route('owner.visitors.index')" :active="request()->routeIs('owner.visitors.index')">
+                 <x-nav-link :href="route('owner.visitors.index')" :active="request()->routeIs('owner.visitors.index') || request()->has('visitor')">
                      {{ __('Visitor') }}
                  </x-nav-link>
                  <x-nav-link :href="route('order.create')" :active="request()->routeIs('order.create')">
@@ -34,7 +33,6 @@
          </nav>
          <div class="flex flex-1 items-center justify-end gap-x-8">
              <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                 <span class="sr-only">View notifications</span>
                  <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                      aria-hidden="true" data-slot="icon">
                      <path stroke-linecap="round" stroke-linejoin="round"
@@ -61,7 +59,6 @@
                  </button>
                  <div class="-ml-0.5">
                      <a href="#" class="-m-1.5 block p-1.5">
-                         <span class="sr-only">Your Company</span>
                          <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="">
                      </a>
                  </div>

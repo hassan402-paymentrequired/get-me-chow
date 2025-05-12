@@ -42,10 +42,20 @@
              <span class="text-2xl font-bold text-gray-900 uppercase">{{ substr($order->name, 0, 2) }}</span>
          </div>
          <div class="text-sm/6 font-medium text-gray-900">{{ $order->name }}</div>
+         @if ($order->items->count() === 0 && $order->created_at->isToday())
+             <div class="p-1 bg-red-800 items-center text-red-100 leading-none lg:rounded-full flex lg:inline-flex"
+                 role="alert">
+                 <span class="font-semibold text-[10px] mr-2 text-left flex-auto">No order items on this order <a href="{{ route('owner.order.remove.add', $order->id) }}" class="font-bold underline">Add Item</a></span>
+                 <svg class="fill-current opacity-75 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                     <path d="M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z" />
+                 </svg>
+             </div>
+         @endif
          <div class="relative ml-auto">
              <div x-data="{ open: false }" class="relative">
-                 <button @click="open = !open" type="button" class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500"
-                     id="options-menu-1-button" aria-expanded="false" aria-haspopup="true">
+                 <button @click="open = !open" type="button"
+                     class="-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500" id="options-menu-1-button"
+                     aria-expanded="false" aria-haspopup="true">
                      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                          <path
                              d="M3 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM8.5 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM15.5 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
@@ -55,17 +65,14 @@
                  <div x-show="open" @click.away="open = false"
                      class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-hidden"
                      role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1-button" tabindex="-1">
-                     @if ($order->owner_id === auth()->user()->id)
-                         <a href="#" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem"
-                             tabindex="-1" id="options-menu-1-item-1">Edit</a>
+                     @if (
+                         $order->owner_id === auth()->user()->id &&
+                             $order->status === \App\OrderStatusEnum::CANCELED->value &&
+                             $order->created_at->format('Y-m-d') === \Carbon\Carbon::today()->format('Y-m-d'))
+                         <a href="{{ route('owner.order.remove.add', ['order' => $order]) }}"
+                             class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1"
+                             id="options-menu-1-item-1">Edit</a>
                      @endif
-                     {{-- @if ($order->status === \App\OrderStatusEnum::NOT_PICKED->value)
-                         <form action="{{ route('buyer.order.accept', ['order' => $order]) }}" method="post">
-                             @csrf
-                             @method('PATCH')
-                             <button class="block px-3 py-1 text-sm/6 text-gray-900">Accept Order</button>
-                         </form>
-                     @endif --}}
                      <a href="{{ route('order.show', $order->id) }}" class="block px-3 py-1 text-sm/6 text-gray-900"
                          role="menuitem" tabindex="-1" id="options-menu-1-item-0">View </a>
                  </div>
@@ -74,8 +81,8 @@
      </div>
      <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm/6">
          <div class="flex justify-between gap-x-4 py-3">
-             <dt class="text-gray-500">User</dt>
-             <dd class="text-gray-700"><time datetime="2023-01-22">{{ $order->owner->first_name }}</time></dd>
+             <dt class="text-gray-500">Buyer</dt>
+             <dd class="text-gray-700"><time datetime="2023-01-22">{{ $order->buyer->first_name }}</time></dd>
          </div>
          <div class="flex justify-between gap-x-4 py-3">
              <dt class="text-gray-500">Total Price</dt>

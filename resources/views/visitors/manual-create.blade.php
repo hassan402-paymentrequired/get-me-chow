@@ -10,12 +10,11 @@
             fetch('{{ route('visitor.search') }}?q=' + encodeURIComponent(this.searchQuery))
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    this.searchResults = data;
+                    this.searchResults = data.visitors;
                 });
         }
     }">
-        <div x-show="showModa" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
+        <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
             <div
                 class="relative isolate transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -60,6 +59,12 @@
                         </div>
                     </div>
                     @include('components.search-visitor')
+                    <template x-if="searchQuery && !searchResults?.lenght">
+                        <span class="text-xs text-gray-500">Sorry man. I can't find anything</span>
+                    </template>
+                    <template x-if="searchResults?.lenght">
+                        <span class="text-xs text-gray-500">This is all i could found</span>
+                    </template>
                 </div>
 
             </div>
@@ -79,7 +84,7 @@
             <form class="space-y-4 grid w-full" action="{{ route('visitor.send.visit.request') }}" method="POST">
                 @csrf
                 <div class=" grid sm:grid-cols-2 gap-5">
-                    <x-text-input type='text' placeholder='Name' value="{{old('name')}}" name="name"
+                    <x-text-input type='text' placeholder='Name' value="{{ old('name') }}" name="name"
                         icon="
                     <svg xmlns='http://www.w3.org/2000/svg' fill='#bbb' stroke='#bbb' class='w-[18px] h-[18px] absolute right-4' viewBox='0 0 24 24'>
                         <circle cx='10' cy='7' r='6' data-original='#000000'></circle>
@@ -87,10 +92,10 @@
                             data-original='#000000'></path>
                     </svg>
                 " />
-                    <x-text-input type='text' placeholder='phone' name="phone" value="{{old('phone')}}"/>
+                    <x-text-input type='text' placeholder='phone' name="phone" value="{{ old('phone') }}" />
                 </div>
                 <div class=" grid sm:grid-cols-2 gap-5 mt-3">
-                    <x-text-input type='email' placeholder='Email(optional)' name="email" value="{{old('email')}}"/>
+                    <x-text-input type='email' placeholder='Email(optional)' name="email" value="{{ old('email') }}" />
                     <x-select name="employee_id">
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->first_name . ' ' . $user->last_name }}

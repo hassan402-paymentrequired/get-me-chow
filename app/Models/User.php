@@ -87,7 +87,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-   public function chats(): HasMany
+    public function chats(): HasMany
     {
         return $this->hasMany(Chat::class);
     }
@@ -100,5 +100,15 @@ class User extends Authenticatable
     public function buyerChats(): HasMany
     {
         return $this->hasMany(Chat::class, 'buyer_id');
+    }
+
+    /**
+     * Get all of the visitorCHeck for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function visitorCHeck(): HasMany
+    {
+        return $this->hasMany(VisitorCheckIn::class, 'employee_id');
     }
 }

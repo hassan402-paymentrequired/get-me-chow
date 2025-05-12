@@ -28,7 +28,8 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </dt>
-                            <dd class="text-sm/6 font-medium text-gray-900">{{ ucwords($order->owner->first_name . ' ' . $order->owner->last_name) }}</dd>
+                            <dd class="text-sm/6 font-medium text-gray-900">
+                                {{ ucwords($order->owner->first_name . ' ' . $order->owner->last_name) }}</dd>
                         </div>
                         <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
                             <dt class="flex-none">
@@ -43,7 +44,8 @@
                                 </svg>
                             </dt>
                             <dd class="text-sm/6 text-gray-500">
-                                <time datetime="{{ $order->created_at }}">{{ $order->created_at->format('D H:i A') }}</time>
+                                <time
+                                    datetime="{{ $order->created_at }}">{{ $order->created_at->format('D H:i A') }}</time>
                             </dd>
                         </div>
                         {{-- <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -128,16 +130,66 @@
                         @endforeach
                     </tbody>
                     <tfoot>
-
                         <tr>
                             <th scope="row" class="pt-4 font-semibold text-gray-900 sm:hidden">Total</th>
                             <th scope="row" colspan="3"
                                 class="hidden pt-4 text-right font-semibold text-gray-900 sm:table-cell">Total</th>
                             <td class="pb-0 pl-8 pr-0 pt-4 text-right font-semibold tabular-nums text-gray-900">
-                                &#x20A6;{{ number_format($order->total_amount, 2) }}</td>
+                                &#x20A6;{{ number_format($order->total_amount, 2) }}
+                                </td>
                         </tr>
+
                     </tfoot>
                 </table>
+                @if ($order->status === \App\OrderItemStatusEnum::PENDING->value && $order->owner_id === auth()->user()->id)
+                    <x-primary-button x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">Mark As
+                        Completed</x-primary-button>
+                @endif
+                @if ($order->status !== \App\OrderItemStatusEnum::PENDING->value && $order->owner_id === auth()->user()->id)
+                    <form action="{{ route('orders.repeat', ['order' => $order->id]) }}" method="post">
+                        @csrf
+                        @method('PATCH')
+                        <x-primary-button>
+                            Repeat Order
+                        </x-primary-button>
+                    </form>
+                @endif
+                <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                    <form method="post" action="{{ route('owner.order.update', ['order' => $order]) }}"
+                        class="p-6">
+                        @csrf
+                        @method('PATCH')
+
+                        <h2 class="text-lg font-medium text-gray-900 ">
+                            {{ __('Are you sure you want to mark this order as completed?') }}
+                        </h2>
+
+                        {{-- <p class="mt-1 text-sm text-gray-600 ">
+                            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                        </p> --}}
+
+                        {{-- reacion gose here --}}
+                        {{-- <div class="mt-6">
+                            <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                            <x-text-input id="password" name="password" type="password" class="mt-1 block w-3/4"
+                                placeholder="{{ __('Password') }}" />
+
+                            <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                        </div> --}}
+
+                        <div class="mt-6 flex justify-end">
+                            <x-secondary-button x-on:click="$dispatch('close')">
+                                {{ __('Cancel') }}
+                            </x-secondary-button>
+
+                            <x-primary-button class="ms-3">
+                                {{ __('Mark as Completed') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                </x-modal>
             </div>
 
             <div class="lg:col-start-3" x-data="{

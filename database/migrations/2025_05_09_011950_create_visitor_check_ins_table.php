@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignUlid('visitor_id')->index()->constrained('visitors');
             $table->timestamp('check_in_time')->default(now());
             $table->timestamp('check_out_time')->nullable();
-             $table->longText("reason")->nullable();
+            $table->longText("reason")->nullable();
+            $table->foreignUlid("employee_id")->nullable()->index()->default(null)->constrained("users")->cascadeOnDelete();
             $table->timestamps();
         });
     }

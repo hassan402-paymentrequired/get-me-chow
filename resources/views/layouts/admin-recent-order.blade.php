@@ -29,30 +29,33 @@
                           </svg>
                           <div class="flex-auto">
                               <div class="flex items-start gap-x-3">
-                                  <div class="text-sm/6 font-medium text-gray-900">$7,600.00 USD
+                                  <div class="text-sm/6 font-medium text-gray-900">
+                                      {{ $order->name }}
                                   </div>
                                   <div
                                       class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
                                       Paid</div>
                               </div>
-                              <div class="mt-1 text-xs/5 text-gray-500">$500.00 tax</div>
+                              <div class="mt-1 text-xs/5 text-gray-500">
+                                  &#x20A6;{{ number_format($order->total_amount, 2) }}
+
+                              </div>
                           </div>
                       </div>
                       <div class="absolute right-full bottom-0 h-px w-screen bg-gray-100"></div>
                       <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100"></div>
                   </td>
                   <td class="hidden py-5 pr-6 sm:table-cell">
-                      <div class="text-sm/6 text-gray-900">Reform</div>
-                      <div class="mt-1 text-xs/5 text-gray-500">Website redesign</div>
+                      <div class="text-sm/6 text-gray-900">
+                          {{ ucwords($order->owner->first_name . ' ' . $order->owner->last_name) }}</div>
+                      {{-- <div class="mt-1 text-xs/5 text-gray-500">Website redesign</div> --}}
                   </td>
                   <td class="py-5 text-right">
                       <div class="flex justify-end">
                           <a href="#"
-                              class="text-sm/6 font-medium text-indigo-600 hover:text-indigo-500">View<span
-                                  class="hidden sm:inline"> transaction</span><span class="sr-only">, invoice #00012,
-                                  Reform</span></a>
+                              class="text-sm/6 font-medium text-neutral-600 hover:text-neutral-500">View</a>
                       </div>
-                      <div class="mt-1 text-xs/5 text-gray-500">Invoice <span class="text-gray-900">#00012</span></div>
+                      <div class="mt-1 text-xs/5 text-gray-500">{{ $order->created_at->format('h:i A') }}</div>
                   </td>
               </tr>
           @empty
@@ -82,30 +85,36 @@
                           </svg>
                           <div class="flex-auto">
                               <div class="flex items-start gap-x-3">
-                                  <div class="text-sm/6 font-medium text-gray-900">$14,000.00 USD
+                                  <div class="text-sm/6 font-medium text-gray-900">
+                                      {{ $order->name }}
                                   </div>
                                   <div
                                       class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
                                       Paid</div>
                               </div>
-                              <div class="mt-1 text-xs/5 text-gray-500">$900.00 tax</div>
+
+                              <div class="mt-1 text-xs/5 text-gray-500">
+                                  &#x20A6;{{ number_format($order->total_amount, 2) }}</div>
+
                           </div>
                       </div>
                       <div class="absolute right-full bottom-0 h-px w-screen bg-gray-100"></div>
                       <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100"></div>
                   </td>
                   <td class="hidden py-5 pr-6 sm:table-cell">
-                      <div class="text-sm/6 text-gray-900">SavvyCal</div>
-                      <div class="mt-1 text-xs/5 text-gray-500">Website redesign</div>
+                      <div class="text-sm/6 text-gray-900">
+                          {{ ucwords($order->owner->first_name . ' ' . $order->owner->last_name) }}
+                      </div>
+                      {{-- <div class="mt-1 text-xs/5 text-gray-500">Website redesign</div> --}}
                   </td>
                   <td class="py-5 text-right">
                       <div class="flex justify-end">
                           <a href="#"
-                              class="text-sm/6 font-medium text-indigo-600 hover:text-indigo-500">View<span
-                                  class="hidden sm:inline"> transaction</span><span class="sr-only">, invoice #00010,
+                              class="text-sm/6 font-medium text-neutral-600 hover:text-neutral-500">View<span
+                                  class="hidden sm:inline"> Order</span><span class="sr-only">, invoice #00010,
                                   SavvyCal</span></a>
                       </div>
-                      <div class="mt-1 text-xs/5 text-gray-500">Invoice <span class="text-gray-900">#00010</span></div>
+                      <div class="mt-1 text-xs/5 text-gray-500">{{ $order->created_at->format('h:i A') }}</div>
                   </td>
               </tr>
           @empty

@@ -13,25 +13,40 @@
             <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Your Company">
         </div>
         <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
-            <a href="{{ route('admin.index') }}">Dashboard</a>
-            <a href="{{ route('admin.users') }}">users</a>
-            <a href="{{ route('admin.settings') }}">Settings</a>
-            <a href="{{ route('admin.visitors.index') }}">Visitors</a>
+            <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                {{ __('Dashboard') }}
+            </x-nav-link>
+            <x-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')">
+                {{ __('Users') }}
+            </x-nav-link>
+            <x-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')">
+                {{ __('Settings') }}
+            </x-nav-link>
+            <x-nav-link :href="route('admin.visitors.index')" :active="request()->routeIs('admin.visitors.index')">
+                {{ __('Visitors') }}
+            </x-nav-link>
         </nav>
         <div class="flex flex-1 items-center justify-end gap-x-8">
             <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                <span class="sr-only">View notifications</span>
                 <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                     aria-hidden="true" data-slot="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
             </button>
-           <a href="{{ route('profile.edit') }}" class="-m-1.5 p-1.5">
-                 <div class="flex size-8 rounded-full bg-gray-100 items-center justify-center uppercase">
-                     {{ substr(auth()->user()->first_name, 0, 2) }}
-                 </div>
-             </a>
+            <div class="-m-1.5 p-1.5 relative" x-data="{log: false}">
+                <div @click="log = true" class="flex cursor-pointer size-8 rounded-full bg-gray-100 items-center justify-center uppercase">
+                    {{ substr(auth()->user()->first_name, 0, 2) }}
+                </div>
+
+                <div class=" absolute top-10 right-2 " x-show="log" @click.away="log = false">
+                    <form method="POST" class="w-[100px]" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-danger-button>{{ __('Log Out') }}</x-danger-button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Mobile menu, show/hide based on menu open state. -->

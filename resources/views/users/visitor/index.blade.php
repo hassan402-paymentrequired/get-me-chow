@@ -1,11 +1,11 @@
-@extends('layouts.visitor.app')
+@extends('layouts.visitor.user')
 @section('contents')
     <div class="flex flex-col">
         <div class="-m-1.5 overflow-x-auto">
             <div class="p-1.5 min-w-full inline-block align-middle">
                 <div class="border border-gray-200 divide-y divide-gray-200">
                     <div class="py-3 px-4">
-                        <form method="GET" action="{{ route('admin.visitors.index') }}">
+                        <form >
                             <div class="relative max-w-xs">
                                 <input type="text" name="search" id="hs-table-with-pagination-search"
                                     class="py-1.5 sm:py-2 px-3 ps-9 block w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
@@ -69,8 +69,8 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800"
+                                      <tr>
+                                        <td class="px-6 flex items-center justify-center w-full py-4 whitespace-nowrap text-sm font-medium text-gray-800"
                                             colspan="7">
                                             No Data
                                         </td>

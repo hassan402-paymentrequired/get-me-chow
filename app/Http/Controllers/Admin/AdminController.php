@@ -48,12 +48,13 @@ class AdminController extends Controller
         $users = User::whereNotNull('rotation_index')->orderBy('rotation_index')->get();
         // $currentBuyer = getBuyer();
          $currentBuyer = User::where('current_buyer', true)->first();
-        return view('admin.settings', compact('currentBuyer', 'users'));
+          $user =  auth()->user();
+        return view('admin.settings', compact('currentBuyer', 'users', 'user'));
     }
 
     public function visitors(Request $request)
     {
-        $visitors = $this->filterVisitor($request)->paginate();
+        $visitors = $this->filterVisitor($request)->whereDate('created_at', today())->paginate();
         return view('admin.visitors.index', compact('visitors'));
     }
 
