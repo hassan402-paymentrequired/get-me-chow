@@ -1,6 +1,6 @@
 <template x-for="visitor in searchResults">
     <div 
-        @click="selectedUser = visitor; hasVisited = false;"
+        @click="sendOtp(visitor)"
         class="cursor-pointer transition-shadow hover:shadow-lg rounded-xl border border-gray-200 bg-white p-4 mb-3 flex items-center gap-4"
     >
         <div class="flex-shrink-0">

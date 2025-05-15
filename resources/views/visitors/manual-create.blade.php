@@ -8,7 +8,8 @@
         selectedUser: null,
         selectedVisitor: null,
         otp: null,
-        isVerified:false,
+        isVerified: false,
+        isLoading: false,
         searchVisitors() {
             fetch('{{ route('visitor.search') }}?q=' + encodeURIComponent(this.searchQuery))
                 .then(response => response.json())
@@ -21,6 +22,41 @@
             const date = new Date(dateStr);
             const options = { weekday: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
             return date.toLocaleString('en-US', options).replace(',', ' at');
+        },
+        sendOtp(visitor) {
+            this.selectedUser = visitor;
+            this.hasVisited = false;
+            fetch('{{ route('visitor.send.otp', ['visitor' => ':id']) }}'.replace(':id', this.selectedUser.id), {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(res => res.json())
+                .then(data => { console.log(data) })
+        },
+        verifyOtp() {
+            this.isLoading = true;
+            fetch('{{ route('visitor.verify.otp', ['visitor' => ':id']) }}'.replace(':id', this.selectedUser.id), {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ otp: this.otp })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    this.isLoading = false;
+                    this.isVerified = true;
+                    this.hasVisited = false;
+                    alert(data.message);
+    
+                });
         }
     }">
         <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
@@ -52,20 +88,31 @@
             </div>
         </div>
 
-        <div x-show="selectedUser" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
+        <div x-show="selectedUser && isVerified"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
             @include('components.click')
         </div>
+
+        <div x-show="selectedUser && !isVerified"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
+            @include('components.send-visit-opt')
+        </div>
+
+
 
         @include('components.has-visited')
 
         <div
             class="flex flex-col sm:w-[800px] items-start gap-5 p-4 mx-auto max-w-7xl bg-white [box-shadow:0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
-            <div>
+           <div class="flex items-center justify-between">
+             <div>
                 <h1 class="text-slate-900 text-3xl font-semibold">Hey there 👋🏻, Welcome to INITS Limited</h1>
                 <p class="text-sm text-slate-500 mt-4 leading-relaxed">
                     Looks like you are looking for someone here kindly Enter the following details
                 </p>
             </div>
+            <x-primary-button>check in </x-primary-button>
+           </div>
 
             <form class="space-y-4 grid w-full" action="{{ route('visitor.send.visit.request') }}" method="POST">
                 @csrf

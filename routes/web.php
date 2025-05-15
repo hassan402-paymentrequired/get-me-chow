@@ -25,6 +25,8 @@ Route::prefix('visitors')->group(function () {
     Route::get('/pending-request/{visitor}', [VisitorsController::class, 'PendingVisitRequest'])->name('visitor.pending.request');
     Route::get('/{visitor}/details', [VisitorsController::class, 'show'])->name('visitor.show');
     Route::post('/resend-visit-request', [VisitorsController::class, 'resendVisitRequest'])->name('visitor.resend.visit.request');
+    Route::patch('/send-otp/{visitor}', [VisitorsController::class, 'sendVisitOtp'])->name('visitor.send.otp');
+    Route::patch('/verify-otp/{visitor}', [VisitorsController::class, 'verifyOtp'])->name('visitor.verify.otp');
 });
 
 

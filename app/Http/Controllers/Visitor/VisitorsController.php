@@ -87,4 +87,31 @@ class VisitorsController extends Controller
         $visitor->save();
         return to_route('visitor.pending.request', $visitor)->with('success', 'Visit request sent successfully');
     }
+
+    public function sendVisitOtp(Request $request, Visitor $visitor)
+    {
+        $visitor->update([
+            'otp' => rand(100000, 999999),
+            'otp_expiry_at' => now()->addMinutes(5)
+        ]);
+        $visitor->user->notify(new \App\Notifications\VisitorOtpNotification($visitor, $visitor->otp));
+        return response()->json(['message' => 'OTP sent successfully']);
+    }
+
+    public function verifyOtp(Request $request, Visitor $visitor)
+    {
+        $request->validate([
+            'otp' => 'required|numeric',
+        ]);
+        Log::info($request->otp);
+        Log::info($visitor->toArray());
+        if ($visitor->otp === $request->otp && $visitor->otp_expiry_at > now()) {
+            // $visitor->is_confirmed = true;
+            $visitor->otp = null;
+            $visitor->otp_expiry_at = null;
+            $visitor->save();
+            return response()->json(['message' => 'OTP verified successfully']);
+        }
+        return response()->json(['message' => 'Invalid OTP'], 422);
+    }
 }
