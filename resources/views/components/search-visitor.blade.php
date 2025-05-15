@@ -1,18 +1,25 @@
- <template x-for="visitor in searchResults">
-     <div @click="selectedUser = visitor; hasVisited = false;  console.log(JSON.parse(JSON.stringify(visitor)))">
-         <input type="radio" id="job-3" name="job" value="job-3" class="hidden peer">
-         <label for="job-3"
-             class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer ">
-             <div class="block">
-                 <div class="w-full text-lg font-semibold" x-text="visitor.name"></div>
-                 <div class="w-full text-gray-500 dark:text-gray-400">Host</div>
-                 <div class="w-full text-gray-500 dark:text-gray-400" x-text="visitor.user.first_name"></div>
-             </div>
-             <svg class="w-4 h-4 ms-3 rtl:rotate-180 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     d="M1 5h12m0 0L9 1m4 4L9 9" />
-             </svg>
-         </label>
-     </div>
- </template>
+<template x-for="visitor in searchResults">
+    <div 
+        @click="selectedUser = visitor; hasVisited = false;"
+        class="cursor-pointer transition-shadow hover:shadow-lg rounded-xl border border-gray-200 bg-white p-4 mb-3 flex items-center gap-4"
+    >
+        <div class="flex-shrink-0">
+            <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold">
+                <span x-text="visitor.name.charAt(0)"></span>
+            </div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+                <span class="text-lg font-semibold truncate" x-text="visitor.name"></span>
+                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Host</span>
+            </div>
+            <div class="text-sm text-gray-500 truncate" x-text="visitor.user.first_name"></div>
+        </div>
+        <input type="radio" :id="'visitor-' + visitor.id" name="job" :value="visitor.id" class="hidden peer">
+        <label :for="'visitor-' + visitor.id" class="ml-4">
+            <svg class="w-5 h-5 text-gray-400 peer-checked:text-blue-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 14 10">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+        </label>
+    </div>
+</template>

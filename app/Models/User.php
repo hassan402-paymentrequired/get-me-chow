@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUlids;
+    use HasFactory, Notifiable, HasUlids, HasPushSubscriptions;
 
 
     /**
@@ -110,5 +111,15 @@ class User extends Authenticatable
     public function visitorCHeck(): HasMany
     {
         return $this->hasMany(VisitorCheckIn::class, 'employee_id');
+    }
+
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
+    public function getIncrementing()
+    {
+        return false;
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderItemRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Notifications\VisitorArrivedNotification;
 use App\OrderStatusEnum;
 use Carbon\Carbon;
 use Exception;
@@ -104,5 +105,25 @@ class UserController extends Controller
     {
         $order->delete();
         return back()->with('success', 'Order deleted successfully');
+    }
+
+
+    public function storeSub(Request $request)
+    {
+        // return $request->all();
+        auth()->user()->updatePushSubscription(
+            $request->endpoint,
+            $request->keys['p256dh'],
+            $request->keys['auth']
+        );
+        return response()->json(['success' => true]);
+    }
+
+    public function send(Request $request)
+    {
+        $user = auth()->user();
+        $user->notify(new VisitorArrivedNotification()); 
+
+        return back()->with('success', 'Notification sent!');
     }
 }

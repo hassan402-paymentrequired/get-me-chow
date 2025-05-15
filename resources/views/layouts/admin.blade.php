@@ -18,32 +18,44 @@
     </main>
 
     <button onclick="requestPermission()">Enable Notification</button>
+    <script src="https://cdn.jsdelivr.net/npm/web-push"></script>
 
     <script>
         window.User = {!! json_encode(optional(auth()->user())->only('id', 'email')) !!}
         navigator.serviceWorker.register("sw.js");
 
-        // widow.addEventListener("load", requestPermission);
-
-        function requestPermission() {
-            Notification.requestPermission().then((permission) => {
-                
+        function askForNotificationPermission() {
+            Notification.requestPermission().then(function(permission) {
                 if (permission === 'granted') {
+                    navigator.serviceWorker.ready.then(function(registration) {
 
-                    // get service worker
-                    navigator.serviceWorker.ready.then((sw) => {
 
-                        // subscribe
-                        sw.pushManager.subscribe({
+                        registration.pushManager.subscribe({
                             userVisibleOnly: true,
-                            applicationServerKey: "BC5zel9JoqeOY2yVTJjDhiE1IisJTVHq-_p4rxC3zd60gQSqXzra_7_m7B12axwI42tZIUXYGXhIJ-t5MolKjNY"
-                        }).then((subscription) => {
+                            applicationServerKey: '<?= env('VAPID_PUBLIC_KEY') ?>'
+                        }).then(async function(subscription) {
+                            //  console.log(subscription);
+                            await fetch("{{ route('save.subscription') }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify(subscription)
+                                }).then(function(response) {
 
-                            // subscription successful
-                            fetch("/api/push-subscribe", {
-                                method: "post",
-                                body: JSON.stringify(subscription)
-                            }).then(alert("ok"));
+
+                                    if (response.ok) {
+                                        console.log('Subscription saved successfully.');
+                                    } else {
+                                        console.error('Failed to save subscription.');
+                                    }
+                                }).then(function(data) {
+                                    console.log('Subscription saved:', data);
+                                })
+                                .catch(function(error) {
+                                    console.error('Error saving subscription:', error);
+                                });
                         });
                     });
                 }

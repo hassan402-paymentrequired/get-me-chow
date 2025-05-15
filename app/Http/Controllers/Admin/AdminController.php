@@ -7,6 +7,7 @@ use App\Http\Requests\StoreVisitorRequest;
 use App\Models\DutyRotationTable;
 use App\Models\User;
 use App\Models\Visitor;
+use App\Notifications\VisitorArrivedNotification;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ class AdminController extends Controller
     {
         $data = $this->getDashboardData($request);
         // dd($data);
+        // $user = auth()->user();
+        //  $user->notify(new VisitorArrivedNotification()); 
         return view('admin.index', compact('data'));
     }
 

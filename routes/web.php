@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::post('/save-subscription', [UserController::class, 'storeSub'])->name('save.subscription');
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
@@ -78,6 +79,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/order/add-items/{order}', [UserController::class, 'addOrderItems'])->name('owner.order.remove.add');
         Route::patch('/order/add-items/{order}', [UserController::class, 'updateOrderItems'])->name('owner.order.remove.update');
         Route::delete('/order/destroy/{order}', [UserController::class, 'deleteOrder'])->name('owner.order.delete');
+        Route::post('/send-push-test', [UserController::class, 'send']);
     });
 });
 

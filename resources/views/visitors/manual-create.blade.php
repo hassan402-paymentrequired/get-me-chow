@@ -7,6 +7,8 @@
         searchResults: [],
         selectedUser: null,
         selectedVisitor: null,
+        otp: null,
+        isVerified:false,
         searchVisitors() {
             fetch('{{ route('visitor.search') }}?q=' + encodeURIComponent(this.searchQuery))
                 .then(response => response.json())
@@ -53,34 +55,8 @@
         <div x-show="selectedUser" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
             @include('components.click')
         </div>
-        <div x-show="hasVisited" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 ">
-            <div
-                class="relative isolate transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 flex flex-col gap-5 w-full ">
-                    <div class="flex flex-col items-start w-full gap-1 ">
-                        <x-input-label class="text-sm font-medium text-slate-700">Enter name or phone no or
-                            email</x-input-label>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-grow">
-                                <x-text-input placeholder="Enter name or phone no or email" class="w-full "
-                                    x-model.debounce.500ms="searchQuery" />
-                            </div>
-                            <x-primary-button @click="searchVisitors">Search</x-primary-button>
-                        </div>
-                    </div>
-                    @include('components.search-visitor')
-                    <template x-if="searchQuery && !searchResults?.lenght">
-                        <span class="text-xs text-gray-500">Sorry man. I can't find anything</span>
-                    </template>
-                    <template x-if="searchResults?.lenght">
-                        <span class="text-xs text-gray-500">This is all i could found</span>
-                    </template>
-                </div>
 
-            </div>
-        </div>
-
-
+        @include('components.has-visited')
 
         <div
             class="flex flex-col sm:w-[800px] items-start gap-5 p-4 mx-auto max-w-7xl bg-white [box-shadow:0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
