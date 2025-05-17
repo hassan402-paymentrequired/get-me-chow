@@ -57,10 +57,19 @@ class AdminController extends Controller
 
     public function visitors(Request $request)
     {
-        $visitors = $this->filterVisitor($request)->whereHas('latestCheckin', function ($query) {
-            $query->whereDate('created_at', today());
-        })->where('is_confirmed', true)
-            // ->with(['user', 'latestCheckin.user'])
+        $visitors = $this->filterVisitor($request)
+            ->whereHas('latestCheckin', function ($query) use ($request) {
+                $query->whereDate('created_at', today())
+                    ->when($request->sort_by === 'check_in', function ($q) {
+                        $q->whereNull('check_out_time') // Only visitors who are checked in
+                            ->orderBy('check_in_time');
+                    })
+                    ->when($request->sort_by === 'check_out', function ($q) {
+                        $q->whereNotNull('check_out_time') // Only visitors who are checked out
+                            ->orderBy('check_out_time');
+                    });
+            })
+            ->where('is_confirmed', true)
             ->orderBy('created_at', 'desc')
             ->paginate();
         return view('admin.visitors.index', compact('visitors'));
