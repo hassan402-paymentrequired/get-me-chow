@@ -76,6 +76,12 @@ function saveFileUpload(Request $request, string $target = 'image')
   return $storage ??= null;
 }
 
+function saveFileWithoutCheck(string $target = 'image', $file_name)
+{
+  $storage = Storage::disk('public_uploads')->putFileAs($target, time() . '_' . $file_name);
+  return $storage ??= null;
+}
+
 function hasBooked()
 {
   return Order::where('owner_id', Auth::id())->whereDate('created_at', Carbon::today())->exists();

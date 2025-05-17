@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/visitors/history', [AdminController::class, 'visitorsHistory'])->name('visitors.history');
         Route::patch('/visitors/{visitor}/accept', [AdminController::class, 'acceptVisitorRequest'])->name('visitors.request.accept');
         Route::patch('/visitors/{visitor}/reject', [AdminController::class, 'rejectVisitorRequest'])->name('visitors.request.reject');
+        Route::patch('/visitors/check-out/{visitor}', [AdminController::class, 'checkout'])->name('visitors.checkout');
     });
 
     Route::prefix('order')->group(function () {

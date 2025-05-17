@@ -26,7 +26,7 @@
                             </button>
                         </div>
 
-                        <div class="flex h-full z-50 isolate flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                        <div class="flex h-full z-50 isolate flex-col overflow-y-scroll bg-white py-6 shadow-xl" @click.away="drawer = false">
                             <div class="px-4 sm:px-6">
                                 <h2 class="text-base font-semibold text-gray-900" id="slide-over-title">Remove Item</h2>
                             </div>
@@ -34,8 +34,15 @@
                                 @foreach ($order->items as $item)
                                     <li class="flex justify-between gap-x-6 py-5 group p-4 relative ">
                                         <div class="flex min-w-0 gap-x-4">
+                                            @if ($item->image)
                                             <img class="size-12 flex-none rounded-full bg-gray-50"
                                                 src="{{ asset($item->image) }}" alt="">
+                                                
+                                            @else
+                                                <div class="size-12 flex items-center uppercase text-lg justify-center rounded-full bg-gray-50">
+                                                    {{substr($item->name, 0, 2)}}
+                                                </div>
+                                            @endif
                                             <div class="min-w-0 flex-auto">
                                                 <p class="text-sm/6 font-semibold text-gray-900">{{ $item->name }}</p>
                                                 <p class="mt-1 truncate text-xs/5 text-gray-500">

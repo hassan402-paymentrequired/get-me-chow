@@ -64,14 +64,24 @@
                  </div>
              </div>
              <div class="mt-2 space-y-2">
-                 <a href="#"
-                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Home</a>
-                 <a href="#"
-                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Invoices</a>
-                 <a href="#"
-                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Clients</a>
-                 <a href="#"
-                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Expenses</a>
+                 <x-nav-link :href="route(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')">
+                     {{ __('Dashboard') }}
+                 </x-nav-link>
+                 @if (auth()->user()->is_buyer)
+                     <x-nav-link :href="route('buyer.history.index')" :active="request()->routeIs('buyer.history.index')">
+                         {{ __('History') }}
+                     </x-nav-link>
+                 @else
+                     <x-nav-link :href="route('owner.history.index')" :active="request()->routeIs('owner.history.index')">
+                         {{ __('History') }}
+                     </x-nav-link>
+                     <x-nav-link :href="route('owner.visitors.index')" :active="request()->routeIs('owner.visitors.index') || request()->has('visitor')">
+                         {{ __('Visitor') }}
+                     </x-nav-link>
+                     <x-nav-link :href="route('order.create')" :active="request()->routeIs('order.create')">
+                         {{ __('Create order') }}
+                     </x-nav-link>
+                 @endif
              </div>
          </div>
      </div>

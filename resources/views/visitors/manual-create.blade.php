@@ -104,14 +104,14 @@
 
         <div
             class="flex flex-col sm:w-[800px] items-start gap-5 p-4 mx-auto max-w-7xl bg-white [box-shadow:0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
-           <div class="flex items-center justify-between">
+           <div class="flex items-center justify-between w-full">
              <div>
                 <h1 class="text-slate-900 text-3xl font-semibold">Hey there 👋🏻, Welcome to INITS Limited</h1>
                 <p class="text-sm text-slate-500 mt-4 leading-relaxed">
                     Looks like you are looking for someone here kindly Enter the following details
                 </p>
             </div>
-            <x-primary-button>check in </x-primary-button>
+            <x-primary-button @click="hasVisited = true">Being here before</x-primary-button>
            </div>
 
             <form class="space-y-4 grid w-full" action="{{ route('visitor.send.visit.request') }}" method="POST">

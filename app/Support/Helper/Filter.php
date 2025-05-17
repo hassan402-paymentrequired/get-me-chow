@@ -23,7 +23,7 @@ trait Filter
                     ->orWhere('phone', 'LIKE', "%{$search}%");
             });
         });
-        return $visitors->with(['user', 'latestCheckin']);
+        return $visitors->with(['user', 'latestCheckin.user']);
     }
 
 

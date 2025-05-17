@@ -45,7 +45,7 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 @forelse ($visitors as $visitor)
-                                    <tr>
+                                    <tr class="group">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                                             {{ $visitor->name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
@@ -53,18 +53,27 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                             {{ $visitor->email ?? '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                            {{ $visitor->user->first_name ?? '-' }}</td>
+                                            {{ $visitor->latestCheckin->user->first_name ?? '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                             {{ $visitor->latestCheckin->check_in_time ?? '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                             {{ $visitor->latestCheckin->check_out_time ?? '-#-' }}</td>
-                                        <td class="px-6 py-4 z-10 relative whitespace-nowrap text-end text-sm font-medium">
-                                            <div  class="relative">
-                                                <a href="{{ route('visitor.show', ['visitor'=>$visitor]) }}"
+                                        <td class="px-6 py-4 z-10  relative whitespace-nowrap text-end text-sm font-medium">
+                                            <div class="relative ">
+                                                <a href="{{ route('visitor.show', ['visitor' => $visitor]) }}"
                                                     class="inline-flex items-center  text-xs underline border border-transparent text-black hover:text-neutral-500 ">
-                                                  View
+                                                    View
                                                 </a>
-                                              
+
+                                                <form action="{{ route('admin.visitors.checkout', $visitor) }}"
+                                                    method="POST" class="inline-flex items-center">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center text-xs underline border border-transparent text-red-500 hover:text-neutral-500 ">
+                                                        Check out
+                                                    </button>
+
                                             </div>
                                         </td>
                                     </tr>

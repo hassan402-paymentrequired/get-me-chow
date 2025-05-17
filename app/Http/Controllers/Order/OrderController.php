@@ -43,58 +43,59 @@ class OrderController extends Controller
         return view('order.create', compact('buyer', 'alreadyBookForToday'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StoreOrderRequest $request)
     {
-        $items = json_decode($request->items, true);
+        // dd($request->all());
+        try {
+            $items = json_decode($request->items, true);
+            $path = saveFileUpload($request, 'payment_screenshot');
 
-        $path = null;
-
-        if ($request->hasFile('payment_screenshot')) {
-            $path = $request->file('payment_screenshot')->store('screenshots');
-        }
-
-        $order = Order::create([
-            'owner_id' => Auth::id(),
-            'name' => $request->name,
-            'buyer_id' => $request->buyer,
-            'total_amount' => $request->total_amount,
-            'payment_screenshot' => $path,
-            'total_amount' => $request->total
-        ]);
-
-
-        foreach ($items as $item) {
-            $path = null;
-            $imagePath = null;
-            if (isset($item['image']) && !empty($item['image'])) {
-                $imageData = $item['image'];
-
-                if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
-                    $image = substr($imageData, strpos($imageData, ',') + 1);
-                    $image = str_replace(' ', '+', $image);
-                    $extension = strtolower($type[1]);
-                    $imageName = uniqid() . '.' . $extension;
-                    Storage::put("images/{$imageName}", base64_decode($image));
-                    $imagePath = "images/{$imageName}";
-                    $item['image'] = $imagePath;
-                }
-            }
-
-
-            $order->items()->create([
-                'name' => $item['name'],
-                'quantity' => $item['q'],
-                'amount' => (int)$item['price'] * (int)$item['q'],
-                'note' => $item['note'],
-                'image' => $imagePath
+            $order = Order::create([
+                'owner_id' => Auth::id(),
+                'name' => $request->name,
+                'buyer_id' => $request->buyer,
+                'total_amount' => $request->total_amount,
+                'payment_screenshot' => $path ? '/uploads/' . $path : null,
+                'total_amount' => $request->total
             ]);
-        }
-        // broadcast(new OrderPlacedEvent($order->buyer_id, $order));
 
-        return redirect()->back()->with('success', 'Order placed successfully.');
+
+            foreach ($items as $item) {
+                $path = null;
+                $imagePath = null;
+                if (isset($item['image']) && !empty($item['image'])) {
+                    $imageData = $item['image'];
+
+                    if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
+                        $image = substr($imageData, strpos($imageData, ',') + 1);
+                        $image = str_replace(' ', '+', $image);
+                        $extension = strtolower($type[1]);
+                        $imageName = uniqid() . '.' . $extension;
+                        // Storage::put(" /{$imageName}", base64_decode($image));
+                        $imageName = Storage::disk('public_uploads')->putFileAs(base64_decode($image), time() . '_' . $imageName);
+                        $imagePath = "uploads/{$imageName}";
+                        $item['image'] = $imagePath;
+                        // $item['image'] = saveFileWithoutCheck($);
+                    }
+                }
+
+
+                $order->items()->create([
+                    'name' => $item['name'],
+                    'quantity' => $item['q'],
+                    'amount' => $item['price'],
+                    'note' => $item['note'],
+                    'image' => $imagePath
+                ]);
+            }
+            // broadcast(new OrderPlacedEvent($order->buyer_id, $order));
+
+            return redirect()->back()->with('success', 'Order placed successfully.');
+        } catch (Exception $e) {
+            Log::error('Error creating order', $e->getMessage());
+            return back()->with('error', 'An error occur while creating order');
+        }
     }
 
     public function repeatLastOrder()
@@ -156,9 +157,10 @@ class OrderController extends Controller
 
     public function downloadOrders()
     {
-        $orders = Order::whereDate('created_at', today())->get();
+        $orders = Order::whereDate('created_at', today())->with(['owner', 'items'])->get();
+        // dd($orders);
         $pdf = Pdf::loadView('pdf.orders', compact('orders'));
-        return $pdf->download('orders.pdf');
+        return $pdf->download('pdf.orders');
     }
 
     public function sendMesssage(Request $request, Order $order)

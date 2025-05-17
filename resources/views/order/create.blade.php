@@ -12,7 +12,7 @@
                                 d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
                         </svg></div>
                     <div>
-                        <p class="font-bold">Hey {{auth()->user()->first_name}}</p>
+                        <p class="font-bold">Hey {{ auth()->user()->first_name }}</p>
                         <p class="text-sm">You already have an order for today please edit your order.</p>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
         @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-white overflow-hidden ">
-                <div class="p-6 text-black grid md:grid-cols-3 gap-5 grid-cols-1">
+                <div class="p-6 text-black grid md:grid-cols-3 gap-5 grid-cols-1 max-sm:grid-col-reverse">
 
                     {{-- ORDER FORM --}}
                     <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data"
@@ -103,7 +103,7 @@
                                     class="block mt-1 w-full text-sm text-white" name="payment_screenshot" />
                             </div>
 
-                            <div class="mt-3">
+                            {{-- <div class="mt-3">
                                 <x-input-label for="item_name" :value="__('Paid')" />
                                 <div class="grid sm:grid-cols-2 gap-2 ">
                                     <label for="hs-radio-in-form"
@@ -122,9 +122,10 @@
                                         <span class="text-sm text-gray-500 ms-3 dark:text-neutral-400">Card</span>
                                     </label>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <x-primary-button :disabled="$alreadyBookForToday" class="flex items-center justify-center w-full mt-3 disabled:opacity-50">Make
+                            <x-primary-button :disabled="$alreadyBookForToday"
+                                class="flex items-center justify-center w-full mt-3 disabled:opacity-50">Make
                                 order</x-primary-button>
 
                         </div>
@@ -225,16 +226,24 @@
                 items: [],
                 name: '',
                 quantity: 1,
-                price: 0,
+                price: 200,
                 note: '',
                 image: '',
                 imageFile: null,
                 total: 0,
                 accounts: null,
+                realFile: null,
 
 
+                // handleImageUpload(e) {
+                //     this.imageFile = e.target.files[0];
+                // },
                 handleImageUpload(e) {
-                    this.imageFile = e.target.files[0];
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.imageFile = URL.createObjectURL(file);
+                        this.realFile = file
+                    }
                 },
 
                 handleImageRemove() {
@@ -258,33 +267,46 @@
                 },
 
                 submit() {
-                    if (this.name && this.quantity && this.price) {
-                        if (this.imageFile instanceof File) {
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                this.items.push({
-                                    name: this.name,
-                                    q: this.quantity,
-                                    price: this.price,
-                                    note: this.note,
-                                    image: reader.result
-                                });
-                                this.total += Number(this.price);
-                                this.clearInputs();
-                            };
-                            reader.readAsDataURL(this.imageFile);
-                        } else {
-                            this.items.push({
-                                name: this.name,
-                                q: this.quantity,
-                                price: this.price,
-                                note: this.note,
-                                image: ''
-                            });
-                            this.total += Number(this.price);
-                            this.clearInputs();
-                        }
-                    }
+                    // if (this.name && this.quantity && this.price) {
+                    //     if (this.imageFile instanceof File) {
+                    //         const reader = new FileReader();
+                    //         reader.onload = () => {
+                    //             this.items.push({
+                    //                 name: this.name,
+                    //                 q: this.quantity,
+                    //                 price: Number(this.price) * Number(this.quantity),
+                    //                 note: this.note,
+                    //                 image: reader.result
+                    //             });
+
+
+                    //             this.total += Number(this.price);
+                    //             this.clearInputs();
+                    //         };
+                    //         reader.readAsDataURL(this.imageFile);
+                    //     } else {
+                    //         this.items.push({
+                    //             name: this.name,
+                    //             q: this.quantity,
+                    //             price: Number(this.price) * Number(this.quantity),
+                    //             note: this.note,
+                    //             image: ''
+                    //         });
+                    //         this.total += Number(this.price);
+                    //         this.clearInputs();
+                    //     }
+                    // }
+                    this.items.push({
+                        name: this.name,
+                        q: this.quantity,
+                        price: Number(this.price) * Number(this.quantity),
+                        note: this.note,
+                        image: this.imageFile,
+                        uploadFile: this.realFile
+                    });
+                    this.total += Number(this.price);
+                    this.clearInputs();
+                    // console.log(this.items);
                 },
 
                 clearInputs() {

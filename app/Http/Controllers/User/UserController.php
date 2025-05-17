@@ -85,10 +85,10 @@ class UserController extends Controller
                 'name' => $request->name,
                 'quantity' => $request->quantity,
                 'image' => $storage ? '/uploads/' . $storage : null,
-                'amount' => $request->price,
+                'amount' => (int)$request->price * (int)$request->quantity,
                 'note' => $request->note
             ]);
-            (int)$order->total_amount += (int)$request->price;
+            (int)$order->total_amount += ((int)$request->price * (int)$request->quantity);
             if ($count === 0) {
                 $order->status = OrderStatusEnum::PENDIND->value;
             }

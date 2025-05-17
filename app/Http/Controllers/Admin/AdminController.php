@@ -50,14 +50,19 @@ class AdminController extends Controller
     {
         $users = User::whereNotNull('rotation_index')->orderBy('rotation_index')->get();
         // $currentBuyer = getBuyer();
-         $currentBuyer = User::where('current_buyer', true)->first();
-          $user =  auth()->user();
+        $currentBuyer = User::where('current_buyer', true)->first();
+        $user =  auth()->user();
         return view('admin.settings', compact('currentBuyer', 'users', 'user'));
     }
 
     public function visitors(Request $request)
     {
-        $visitors = $this->filterVisitor($request)->whereDate('created_at', today())->paginate();
+        $visitors = $this->filterVisitor($request)->whereHas('latestCheckin', function ($query) {
+            $query->whereDate('created_at', today());
+        })->where('is_confirmed', true)
+            // ->with(['user', 'latestCheckin.user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate();
         return view('admin.visitors.index', compact('visitors'));
     }
 
@@ -113,4 +118,18 @@ class AdminController extends Controller
             return back()->with('error', 'Something went wrong');
         }
     }
+
+    public function checkout(Request $request, Visitor $visitor)
+    {
+        try {
+            // dd($visitor);
+            $visitor->latestCheckin->update(['check_out_time' => now()]);
+            return to_route('admin.visitors.index')->with('success', 'Visitor checked out successfully');
+        } catch (Exception $e) {
+            Log::error($e);
+            return back()->with('error', 'Something went wrong');
+        }
+    }
+    // Your code here
+
 }
