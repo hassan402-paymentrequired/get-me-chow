@@ -6,9 +6,9 @@
                 <div class="border border-gray-200 divide-y divide-gray-200">
                     <div class="py-3 px-4">
                         <form method="GET" action="{{ route('admin.visitors.index') }}"
-                            class="flex items-center justify-between">
-                            <div class="relative max-w-xs flex items-center gap-3">
-                                <input type="text" name="search" id="hs-table-with-pagination-search"
+                            class="flex items-center justify-between ">
+                            <div class="relative max-w-2xl flex items-center gap-2 ">
+                                <input type="text" name="search" 
                                     class="py-1.5 sm:py-2 px-3 ps-9 block w-full border-gray-200 shadow-2xs rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                                     placeholder="Search for items" value="{{ request('search') }}">
 
@@ -20,7 +20,9 @@
                                         <path d="m21 21-4.3-4.3"></path>
                                     </svg>
                                 </div>
-                                <x-danger-button>Clear Filter</x-danger-button>
+                                @if (request('search') || request('sort_by'))
+                               <x-primary-link :link="route('admin.visitors.index')">Clear filter</x-primary-link>
+                                @endif
                             </div>
                             <div x-data="{ open: false }" class="relative inline-block text-left">
                                 <button type="button"
