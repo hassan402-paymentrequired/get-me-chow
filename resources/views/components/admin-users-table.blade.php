@@ -43,7 +43,7 @@
                   </td>
                   <td class="py-5 text-right">
                       <div class="flex justify-end">
-                          <a href="{{ route('admin.user.show', ['user' => $user['id']]) }}"
+                          <a href="{{ route('admin.user.show.orders', ['user' => $user['id']]) }}"
                               class="text-sm/6 font-medium text-black underline hover:text-neutral-500">View<span
                                   class="hidden sm:inline">
                                   {{ $user['first_name'] . ' ' . $user['last_name'] }}</span></a>

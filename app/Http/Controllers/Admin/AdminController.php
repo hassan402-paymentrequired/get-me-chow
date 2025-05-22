@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVisitorRequest;
 use App\Models\DutyRotationTable;
+use App\Models\RejectedVisior;
 use App\Models\User;
 use App\Models\Visitor;
 use App\Notifications\VisitorArrivedNotification;
@@ -92,12 +93,21 @@ class AdminController extends Controller
 
     public function acceptVisitorRequest(Request $request, Visitor $visitor)
     {
+        $message = 'Visitor request accepted successfully';
         if ($request->action === 'accept') {
             $visitor->is_confirmed = true;
             $visitor->save();
-            return to_route('admin.visitors.index')->with('success', 'Visitor accepted successfully.');
+        } else {
+            RejectedVisior::create([
+                'user_id' => $visitor->employee_id,
+                'name' => $visitor->name,
+                'phone' => $visitor->phone,
+                'reason' => $visitor->latestCheckin->reason
+            ]);
+            $visitor->delete();
+            $message = 'Visitor request rejected successfully';
         }
-        dd('hshs');
+        return to_route('admin.visitors.index')->with('success', $message);
     }
 
     public function rejectVisitorRequest(Request $request, Visitor $visitor)
@@ -141,37 +151,69 @@ class AdminController extends Controller
     }
 
 
-    public function show(User $user)
+    public function userOrder(User $user)
     {
-        // Load the user with all visitor check-ins (past and current)
         $user = $user->load([
             'orders' => function ($query) {
                 $query->latest();
             },
             'visitorCHeck' => function ($query) {
-                $query->with('visitor') // Load visitor details
-                    ->latest(); // Order by most recent first
-                // ->withTrashed(); // Include soft-deleted if applicable
+                $query->with('visitor')
+                    ->latest();
             }
         ])->loadCount([
             'orders',
             'visitorCHeck',
             'visitorCHeck as current_visitors_count' => function ($query) {
-                $query->whereNull('check_out_time'); // Currently checked-in visitors
+                $query->whereNull('check_out_time');
             },
             'visitorCHeck as todays_visitors_count' => function ($query) {
                 $query->whereDate('created_at', today());
             }
         ]);
 
-        // Separate current and past visitors for the view
         $currentVisitors = $user->visitorCHeck
             ->whereNull('check_out_time');
 
         $pastVisitors = $user->visitorCHeck
             ->whereNotNull('check_out_time');
-        // dd($pastVisitors);
-        return view('admin.users.show', compact(
+        // dd($user);
+        return view('admin.users.orders', compact(
+            'user',
+            'currentVisitors',
+            'pastVisitors'
+        ));
+    }
+
+
+    public function userVisitors(User $user)
+    {
+        $user = $user->load([
+            'orders' => function ($query) {
+                $query->latest();
+            },
+            'visitorCHeck' => function ($query) {
+                $query->with('visitor')
+                    ->latest();
+            }
+        ])->loadCount([
+            'orders',
+            'visitorCHeck',
+            'visitorCHeck as current_visitors_count' => function ($query) {
+                $query->whereNull('check_out_time');
+            },
+            'visitorCHeck as todays_visitors_count' => function ($query) {
+                $query->whereDate('created_at', today());
+            }
+        ]);
+
+        $currentVisitors = $user->visitorCHeck
+            ->whereNull('check_out_time');
+
+        $pastVisitors = $user->visitorCHeck
+            ->whereNotNull('check_out_time');
+        // dd($user);
+        return view('admin.users.visitors', compact(
             'user',
             'currentVisitors',
             'pastVisitors'

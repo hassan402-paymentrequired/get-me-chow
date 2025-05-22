@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('visitor_check_ins', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('visitor_id')->index()->constrained('visitors');
+            $table->foreignUlid('visitor_id')->index()->constrained('visitors')->cascadeOnDelete();
             $table->timestamp('check_in_time')->default(now());
             $table->timestamp('check_out_time')->nullable();
             $table->longText("reason")->nullable();
