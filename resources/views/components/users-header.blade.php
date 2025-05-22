@@ -9,7 +9,7 @@
                          clip-rule="evenodd" />
                  </svg>
              </button>
-             <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Getmechow">
+             <img class="h-8 w-auto" src="{{ asset('storage/images/logo.png') }}" alt="Getmechow">
          </div>
          <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
              <x-nav-link :href="route(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')" :active="request()->routeIs(auth()->user()->is_buyer ? 'buyer.dashboard' : 'dashboard')">
@@ -59,7 +59,7 @@
                  </button>
                  <div class="-ml-0.5">
                      <a href="#" class="-m-1.5 block p-1.5">
-                         <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="">
+                         <img class="h-8 w-auto" src="{{ asset('storage/images/logo.png') }}" alt="">
                      </a>
                  </div>
              </div>

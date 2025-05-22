@@ -17,7 +17,6 @@
         {{ $slot }}
     </main>
 
-    <button onclick="requestPermission()">Enable Notification</button>
     <script src="https://cdn.jsdelivr.net/npm/web-push"></script>
 
     <script>

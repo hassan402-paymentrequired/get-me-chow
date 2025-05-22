@@ -53,7 +53,11 @@ trait Filter
 
         $visitorsCount = Visitor::whereBetween('created_at', $dateRange)->where('is_confirmed', true)->count();
         $ordersCount = Order::whereBetween('created_at', $dateRange)->count();
-        $recentVisitors = $this->filterVisitor($request)->whereDate('created_at', Carbon::today())->where('is_confirmed', true)->limit(3)->get();
+
+        $recentVisitors = $this->filterVisitor($request)->whereHas('latestCheckin', function ($query) use ($request) {
+            $query->whereDate('created_at', today());
+        })->with('latestCheckin.user')->where('is_confirmed', true)->limit(3)->get();
+
         $totalCompletedOrder = Order::where('status', OrderStatusEnum::SUCCESSFULL->value)->whereBetween('created_at', $dateRange)->count();
         $totalCancelOrder = Order::where('status', OrderStatusEnum::CANCELED->value)->whereBetween('created_at', $dateRange)->count();
         $todaysOrder = Order::whereDate('created_at', Carbon::today())->withCount('items')->get();

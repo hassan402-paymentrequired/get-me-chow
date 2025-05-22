@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('sender_id')->index()->constrained('users');
-            $table->foreignUlid('receiver_id')->index()->constrained('users');
+            $table->foreignUlid('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->string('title');
-            $table->string('message');
-            $table->string('type');
+            $table->string('message')->nullable();
+            $table->string('type')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });

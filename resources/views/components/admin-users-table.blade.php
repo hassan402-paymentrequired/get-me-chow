@@ -43,9 +43,10 @@
                   </td>
                   <td class="py-5 text-right">
                       <div class="flex justify-end">
-                          <a href="#"
+                          <a href="{{ route('admin.user.show', ['user' => $user['id']]) }}"
                               class="text-sm/6 font-medium text-black underline hover:text-neutral-500">View<span
-                                  class="hidden sm:inline"> {{ $user['first_name'] . ' ' .  $user['last_name'] }}</span></a>
+                                  class="hidden sm:inline">
+                                  {{ $user['first_name'] . ' ' . $user['last_name'] }}</span></a>
                       </div>
                       <div class="mt-1 text-xs/5 text-gray-500">Email:: <span
                               class="text-gray-900">{{ $user['email'] }}</span></div>
@@ -103,7 +104,8 @@
                       <div class="flex justify-end">
                           <a href="#"
                               class="text-sm/6 font-medium text-black underline hover:text-neutral-500">View<span
-                                  class="hidden sm:inline"> {{ $user['first_name'] . ' ' .  $user['last_name'] }}</span></a>
+                                  class="hidden sm:inline">
+                                  {{ $user['first_name'] . ' ' . $user['last_name'] }}</span></a>
                       </div>
                       <div class="mt-1 text-xs/5 text-gray-500">Email:: <span
                               class="text-gray-900">{{ $user['email'] }}</span></div>

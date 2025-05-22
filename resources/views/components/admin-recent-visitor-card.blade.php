@@ -11,7 +11,7 @@
                 <li class="overflow-hidden rounded-xl border border-gray-200">
                     <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
                         <div
-                            class="size-12 flex items-center justify-center rounded-lg bg-gray-100 object-cover ring-1 ring-gray-900/10">
+                            class="size-12 flex items-center uppercase justify-center rounded-lg bg-gray-100 object-cover ring-1 ring-gray-900/10">
                             {{ substr($visitor->name, 0, 2) }}
                         </div>
                         <div class="text-sm/6 font-medium text-gray-900">{{ $visitor->name }}</div>
@@ -39,7 +39,7 @@
                         <div class="flex justify-between gap-x-4 py-3">
                             <dt class="text-gray-500">Host</dt>
                             <dd class="text-gray-700"><time
-                                    datetime="2022-12-13">{{ $visitor->user->first_name . ' ' . $visitor->user->last_name }}</time>
+                                    datetime="2022-12-13">{{ $visitor->latestCheckin->user->first_name . ' ' . $visitor->latestCheckin->user->last_name }}</time>
                             </dd>
                         </div>
                         <div class="flex justify-between gap-x-4 py-3">

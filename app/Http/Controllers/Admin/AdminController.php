@@ -139,6 +139,42 @@ class AdminController extends Controller
             return back()->with('error', 'Something went wrong');
         }
     }
-    // Your code here
 
+
+    public function show(User $user)
+    {
+        // Load the user with all visitor check-ins (past and current)
+        $user = $user->load([
+            'orders' => function ($query) {
+                $query->latest();
+            },
+            'visitorCHeck' => function ($query) {
+                $query->with('visitor') // Load visitor details
+                    ->latest(); // Order by most recent first
+                // ->withTrashed(); // Include soft-deleted if applicable
+            }
+        ])->loadCount([
+            'orders',
+            'visitorCHeck',
+            'visitorCHeck as current_visitors_count' => function ($query) {
+                $query->whereNull('check_out_time'); // Currently checked-in visitors
+            },
+            'visitorCHeck as todays_visitors_count' => function ($query) {
+                $query->whereDate('created_at', today());
+            }
+        ]);
+
+        // Separate current and past visitors for the view
+        $currentVisitors = $user->visitorCHeck
+            ->whereNull('check_out_time');
+
+        $pastVisitors = $user->visitorCHeck
+            ->whereNotNull('check_out_time');
+        // dd($pastVisitors);
+        return view('admin.users.show', compact(
+            'user',
+            'currentVisitors',
+            'pastVisitors'
+        ));
+    }
 }

@@ -10,7 +10,7 @@
                         clip-rule="evenodd" />
                 </svg>
             </button>
-            <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="Your Company">
+            <img class="h-8 w-auto" src="{{ asset('storage/images/logo.png') }}" alt="INITS">
         </div>
         <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700">
             <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
@@ -34,8 +34,9 @@
                         d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
             </button>
-            <div class="-m-1.5 p-1.5 relative" x-data="{log: false}">
-                <div @click="log = true" class="flex cursor-pointer size-8 rounded-full bg-gray-100 items-center justify-center uppercase">
+            <div class="-m-1.5 p-1.5 relative" x-data="{ log: false }">
+                <div @click="log = true"
+                    class="flex cursor-pointer size-8 rounded-full bg-gray-100 items-center justify-center uppercase">
                     {{ substr(auth()->user()->first_name, 0, 2) }}
                 </div>
 
@@ -66,19 +67,25 @@
                 <div class="-ml-0.5">
                     <a href="#" class="-m-1.5 block p-1.5">
                         <span class="sr-only">Your Company</span>
-                        <img class="h-8 w-auto" src="{{ asset('storage/images/log-in.png') }}" alt="">
+                        <img class="h-8 w-auto" src="{{ asset('storage/images/logo.png') }}" alt="INITS getmechow">
                     </a>
                 </div>
             </div>
             <div class="mt-2 space-y-2">
-                <a href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Dashboard</a>
-                <a href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">users</a>
-                <a href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Settings</a>
-                <a href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Expenses</a>
+                {{-- <nav class="hidden md:flex md:gap-x-11 md:text-sm/6 md:font-semibold md:text-gray-700"> --}}
+                    <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')">
+                        {{ __('Users') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')">
+                        {{ __('Settings') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.visitors.index')" :active="request()->routeIs('admin.visitors.index')">
+                        {{ __('Visitors') }}
+                    </x-nav-link>
+                {{-- </nav> --}}
             </div>
         </div>
     </div>

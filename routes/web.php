@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/buyer-change', [AdminController::class, 'changeBuyer'])->name('buyer.change');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/visitors', [AdminController::class, 'visitors'])->name('visitors.index');
+        Route::get('/users/{user}', [AdminController::class, 'show'])->name('user.show');
         Route::get('/visitors/request', [AdminController::class, 'getVisitorsRequest'])->name('visitors.request');
         Route::get('/visitors/created', [AdminController::class, 'createVisitor'])->name('visitors.create');
         Route::post('/visitors/store', [AdminController::class, 'storeVisitor'])->name('visitors.store');
